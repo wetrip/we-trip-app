@@ -1,7 +1,9 @@
+import React from 'react';
 import { createStackNavigator } from 'react-navigation';
 import { Platform } from 'react-native';
 
-import Home from './Home';
+import Header from './components/Header';
+import Home from './HomeComponent';
 
 const ROUTE_NAMES = {
   HOME: 'HOME',
@@ -12,7 +14,10 @@ const RootStack = createStackNavigator(
     [ROUTE_NAMES.HOME]: {
       screen: Home,
       navigationOptions: ({ navigation }) => ({
-        title: 'HOME',
+        header: props => <Header
+          {...props}
+          navigation={navigation}
+        />,
       }),
     },
   },

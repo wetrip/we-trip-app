@@ -9,7 +9,7 @@ const Wrapper = styled(View)`
   height: 100%;
   justify-content: center;
   align-items: center;
-  background-color: ${({ theme }) => theme.colors.secondaryColor};
+  background-color: ${({ theme }) => theme.colors.yellow};
 `;
 
 const DefaultText = styled(Text)`
@@ -20,7 +20,7 @@ const DefaultText = styled(Text)`
 
 const TestComponent = (): Object => (
   <Wrapper>
-    <DefaultText>HOME</DefaultText>
+    <DefaultText>MAP</DefaultText>
   </Wrapper>
 );
 
