@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Fragment } from 'react';
-import { StatusBar, Platform } from 'react-native';
+import { StatusBar } from 'react-native';
 
 import { ThemeProvider } from 'styled-components';
 
@@ -14,7 +14,7 @@ const App = (): Object => (
   <Fragment>
     <StatusBar
       backgroundColor={appStyles.colors.androidToolbarColor}
-      barStyle={Platform.OS === 'android' ? 'light-content' : 'dark-content'}
+      barStyle="dark-content"
     />
     <ThemeProvider
       theme={appStyles}

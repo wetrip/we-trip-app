@@ -1,13 +1,15 @@
 export default {
-  primaryColor: '#DE3C4B',
+  primaryColor: 'rgba(0, 0, 0, 0.8)',
   secondaryColor: '#F2F2F2',
-  androidToolbarColor: '#a60023',
+  androidToolbarColor: '#F2F2F2',
   textColor: 'rgba(0, 0, 0, 0.8)',
   darkLayer: 'rgba(0, 0, 0, 0.5)',
   subText: 'rgba(0, 0, 0, 0.6)',
   white: '#FDFDFD',
   defaultWhite: '#FFFFFF',
   inactiveTabIcon: '#909090',
+  textInputBackgroundColor: '#E3E3E3',
+  textInputTextColor: 'rgba(0, 0, 0, 0.3)',
   green: '#1DB954',
   yellow: '#F8C330',
 };
