@@ -11,5 +11,6 @@ export default {
   textInputBackgroundColor: '#E3E3E3',
   textInputTextColor: 'rgba(0, 0, 0, 0.3)',
   green: '#1DB954',
+  red: '#FB1A1A',
   yellow: '#F8C330',
 };
