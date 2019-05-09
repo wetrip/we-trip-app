@@ -4,7 +4,7 @@ import React from 'react';
 import { FlatList, View } from 'react-native';
 import styled from 'styled-components';
 
-import ListScreen from './List';
+import ListScreen from './list/PlacesList';
 import MapScreen from './Map';
 
 const Wrapper = styled(View)`
@@ -34,11 +34,21 @@ const LAYOUTS = [
 type Props = {
   shouldShowDarkLayer: boolean,
   onSetFlatListRef: Function,
+  onPressListItem: Function,
 };
+
+const PLACES = Array(12)
+  .fill({
+    name: '',
+    url:
+      'https://s3-sa-east-1.amazonaws.com/mind-cast/images/authors/alan-turing/profile.jpg',
+  })
+  .map((place, index) => ({ ...place, name: `PLACE ${index + 1}`, id: index }));
 
 const HomeComponent = ({
   shouldShowDarkLayer,
   onSetFlatListRef,
+  onPressListItem,
 }: Props): Object => (
   <Wrapper>
     <FlatList
@@ -50,12 +60,14 @@ const HomeComponent = ({
             <Layout
               onNavigateToMainStack={this.onNavigateToMainStack}
               onChangeListIndex={this.onChangeListIndex}
+              onPressListItem={onPressListItem}
+              places={PLACES}
             />
           </ContentWrapper>
         );
       }}
       showsHorizontalScrollIndicator={false}
-      keyExtractor={item => item.id}
+      keyExtractor={item => `${item.id}`}
       ref={(ref: any): void => onSetFlatListRef(ref)}
       scrollEnabled={false}
       data={LAYOUTS}

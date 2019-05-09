@@ -80,7 +80,7 @@ class Header extends Component<Props, State> {
 
     const { indexIconSelected, placeName } = this.state;
 
-    const leftIconName = indexIconSelected === 0 ? 'format-list-bulleted' : 'map';
+    const leftIconName = indexIconSelected === 0 ? 'map' : 'format-list-bulleted';
 
     const onToggleDarkLayer = params[CONSTANTS.PARAMS.ON_TOGGLE_DARK_LAYER];
     const onSearchPlaces = params[CONSTANTS.PARAMS.ON_SEARCH_PLACE];

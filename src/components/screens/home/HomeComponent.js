@@ -26,6 +26,10 @@ class HomeContainer extends Component {
     });
   }
 
+  onPressListItem = (id: string): void => {
+    console.tron.log(id);
+  };
+
   onToggleDarkLayer = (shouldShowDarkLayer: boolean): void => {
     this.setState({
       shouldShowDarkLayer,
@@ -62,6 +66,7 @@ class HomeContainer extends Component {
       <HomeComponent
         shouldShowDarkLayer={shouldShowDarkLayer}
         onSetFlatListRef={this.onSetFlatListRef}
+        onPressListItem={this.onPressListItem}
       />
     );
   }
