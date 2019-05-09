@@ -5,7 +5,7 @@ import { FlatList, View } from 'react-native';
 import styled from 'styled-components';
 
 import ListScreen from './list/PlacesList';
-import MapScreen from './Map';
+import MapScreen from './map/PlacesMap';
 
 const Wrapper = styled(View)`
   flex: 1;
@@ -27,8 +27,8 @@ const DarkLayer = styled(View)`
 `;
 
 const LAYOUTS = [
-  { Layout: ListScreen, id: 'list' },
   { Layout: MapScreen, id: 'map' },
+  { Layout: ListScreen, id: 'list' },
 ];
 
 type Props = {

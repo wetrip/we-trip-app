@@ -4,12 +4,13 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import styled from 'styled-components';
 
+import DefaultPlaceListItem from '../../../../common/DefaultPlaceListItem';
+
 const Wrapper = styled(View)`
   width: 100%;
   height: 100%;
   justify-content: center;
   align-items: center;
-  background-color: ${({ theme }) => theme.colors.yellow};
 `;
 
 const DefaultText = styled(Text)`
@@ -18,10 +19,15 @@ const DefaultText = styled(Text)`
   font-weight: 900;
 `;
 
-const TestComponent = (): Object => (
+const PlacesMap = (): Object => (
   <Wrapper>
-    <DefaultText>MAP</DefaultText>
+    <DefaultPlaceListItem
+      imageURL="https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/dishes/fast-food/medium/carrot-and-houmous-rollups.jpeg"
+      name="Oceanário de Lisboa"
+      distanceToUser={2.3}
+      isOpen
+    />
   </Wrapper>
 );
 
-export default TestComponent;
+export default PlacesMap;
