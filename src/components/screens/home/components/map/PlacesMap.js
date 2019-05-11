@@ -1,7 +1,7 @@
 // @flow
 
-import React, { PureComponent, Fragment } from 'react';
-import { Platform, View, Text } from 'react-native';
+import React, { PureComponent } from 'react';
+import { PixelRatio, Platform, View, Text } from 'react-native';
 import styled from 'styled-components';
 
 import MapView, { Marker } from 'react-native-maps';
@@ -11,32 +11,25 @@ import getUserLocation from '../../../../../services/location/getUserLocation';
 import DefaultPlaceListItem from '../../../../common/DefaultPlaceListItem';
 import LoadingUserLocation from './LoadingUserLocation';
 import CONSTANTS from '../../../../../utils/CONSTANTS';
+import PlacesBottomList from './PlacesBottomList';
 import appStyles from '../../../../../styles';
 import Icon from '../../../../common/Icon';
+
+const Container = styled(View)`
+  flex: 1;
+  justify-content: flex-end;
+  align-items: flex-end;
+`;
 
 const MapContainer = styled(MapView)`
   width: 100%;
   height: 100%;
-  position: absolute;
 `;
 
-const PLACES = [
-  {
-    latitude: -3.8406333,
-    longitude: -38.5606571,
-  },
-  {
-    latitude: -3.7273013,
-    longitude: -38.5897033,
-  },
-  {
-    latitude: -3.7451878,
-    longitude: -38.5736122,
-  },
-];
-
 type Props = {
+  onPressListItem: Function,
   placeLocation: Object,
+  places: Array<Object>,
 };
 
 type State = {
@@ -49,6 +42,7 @@ class PlacesMap extends PureComponent<Props, State> {
 
   state = {
     isGettingUserLocation: true,
+    indexPlaceSelected: 0,
     userLocation: null,
   };
 
@@ -86,27 +80,61 @@ class PlacesMap extends PureComponent<Props, State> {
     latitudeDelta: CONSTANTS.VALUES.LATITUDE_DELTA,
   });
 
-  onFitMapCoordinates = (): void => {
-    const { userLocation } = this.state;
+  getMapEdgePadding = (): Object => {
+    const bottomEdgePaddingValue = appStyles.metrics.getWidthFromDP('16%')
+      + appStyles.metrics.getHeightFromDP('16%');
 
-    const markers = userLocation ? [userLocation, PLACES[0]] : [PLACES[0]];
+    const edgePadding = {
+      top: Platform.OS === 'android' ? PixelRatio.getPixelSizeForLayoutSize(50) : 50,
+      right: Platform.OS === 'android' ? PixelRatio.getPixelSizeForLayoutSize(50) : 50,
+      bottom: Platform.OS === 'android' ? PixelRatio.getPixelSizeForLayoutSize(bottomEdgePaddingValue) : bottomEdgePaddingValue,
+      left: Platform.OS === 'android' ? PixelRatio.getPixelSizeForLayoutSize(50) : 50,
+    };
+
+    return edgePadding;
+  };
+
+  onFitMapCoordinates = (): void => {
+    const { indexPlaceSelected, userLocation } = this.state;
+    const { places } = this.props;
+
+    const edgePadding = this.getMapEdgePadding();
+
+    if (userLocation && places.length === 0) {
+      this._mapRef.fitToCoordinates([userLocation], {
+        animated: true,
+        edgePadding,
+      });
+
+      return;
+    }
+    
+    const markers = userLocation
+      ? [userLocation, places[indexPlaceSelected].location]
+      : [places[indexPlaceSelected].location];
 
     this._mapRef.fitToCoordinates(markers, {
       animated: true,
-      edgePadding: {
-        top: 50,
-        right: 50,
-        bottom: 50,
-        left: 50,
-      },
+      edgePadding,
+    });
+  };
+
+  onChangePlaceSelected = (indexPlaceSelected: number): void => {
+    this.setState({
+      indexPlaceSelected,
     });
   };
 
   render() {
-    const { isGettingUserLocation, userLocation } = this.state;
+    const {
+      isGettingUserLocation,
+      indexPlaceSelected,
+      userLocation,
+    } = this.state;
+    const { onPressListItem, places } = this.props;
 
     return (
-      <Fragment>
+      <Container>
         <MapContainer
           ref={(ref) => {
             this._mapRef = ref;
@@ -119,11 +147,16 @@ class PlacesMap extends PureComponent<Props, State> {
             <Directions
               onReady={this.onFitMapCoordinates}
               origin={userLocation}
-              destination={PLACES[0]}
+              destination={
+                places[indexPlaceSelected]
+                && places[indexPlaceSelected].location
+              }
             />
           )}
           <Marker
-            coordinate={PLACES[0]}
+            coordinate={
+              places[indexPlaceSelected] && places[indexPlaceSelected].location
+            }
           >
             <Icon
               color={appStyles.colors.red}
@@ -132,8 +165,13 @@ class PlacesMap extends PureComponent<Props, State> {
             />
           </Marker>
         </MapContainer>
+        <PlacesBottomList
+          onChangePlaceSelected={this.onChangePlaceSelected}
+          onPressListItem={onPressListItem}
+          places={places}
+        />
         {isGettingUserLocation && <LoadingUserLocation />}
-      </Fragment>
+      </Container>
     );
   }
 }

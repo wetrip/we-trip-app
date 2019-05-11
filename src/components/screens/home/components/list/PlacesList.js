@@ -2,8 +2,13 @@
 
 import React from 'react';
 import { FlatList } from 'react-native';
+import styled from 'styled-components';
 
 import PlacesListItem from './PlacesListItem';
+
+const List = styled(FlatList)`
+  width: ${({ theme }) => theme.metrics.width}px;
+`;
 
 type Props = {
   onPressListItem: Function,
@@ -11,7 +16,7 @@ type Props = {
 };
 
 const PlacesList = ({ onPressListItem, places }: Props): Object => (
-  <FlatList
+  <List
     showsVerticalScrollIndicator={false}
     keyExtractor={item => `${item.id}`}
     data={places}

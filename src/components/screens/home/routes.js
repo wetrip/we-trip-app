@@ -3,7 +3,7 @@ import { createStackNavigator } from 'react-navigation';
 import { Platform } from 'react-native';
 
 import Header from './components/Header';
-import Home from './HomeComponent';
+import Home from './HomeContainer';
 
 const ROUTE_NAMES = {
   HOME: 'HOME',
