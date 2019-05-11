@@ -15,8 +15,8 @@ const Wrapper = styled(View)`
 `;
 
 const ContentWrapper = styled(View)`
-  width: ${({ theme }) => theme.metrics.width}px;
-  height: 100%;
+  flex: 1;
+  flex-direction: row;
 `;
 
 const DarkLayer = styled(View)`
@@ -35,23 +35,24 @@ type Props = {
   shouldShowDarkLayer: boolean,
   onSetFlatListRef: Function,
   onPressListItem: Function,
+  places: Array<Object>,
 };
-
-const PLACES = Array(12)
-  .fill({
-    name: '',
-    url:
-      'https://s3-sa-east-1.amazonaws.com/mind-cast/images/authors/alan-turing/profile.jpg',
-  })
-  .map((place, index) => ({ ...place, name: `PLACE ${index + 1}`, id: index }));
 
 const HomeComponent = ({
   shouldShowDarkLayer,
   onSetFlatListRef,
   onPressListItem,
+  places,
 }: Props): Object => (
   <Wrapper>
-    <FlatList
+    <ContentWrapper>
+      <MapScreen
+        onNavigateToMainStack={this.onNavigateToMainStack}
+        onPressListItem={onPressListItem}
+        places={places}
+      />
+    </ContentWrapper>
+    {/* <FlatList
       renderItem={({ item }) => {
         const { Layout } = item;
 
@@ -70,10 +71,11 @@ const HomeComponent = ({
       keyExtractor={item => `${item.id}`}
       ref={(ref: any): void => onSetFlatListRef(ref)}
       scrollEnabled={false}
+      nestedScrollEnabled
       data={LAYOUTS}
       pagingEnabled
       horizontal
-    />
+    /> */}
     {shouldShowDarkLayer && <DarkLayer />}
   </Wrapper>
 );

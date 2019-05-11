@@ -49,7 +49,7 @@ const PlaceStatus = styled(Text).attrs({
 const DistanceText = styled(Text).attrs({
   numberOfLines: 1,
 })`
-  margin-left: ${({ theme }) => theme.metrics.smallSize}px;
+  margin-left: ${({ theme }) => theme.metrics.extraSmallSize}px;
   font-size: ${({ theme }) => theme.metrics.largeSize}px;
   font-weight: 600;
   color: ${({ theme }) => theme.colors.subText};
@@ -93,7 +93,8 @@ const DefaultPlaceListItem = ({
         />
         <DistanceText>
           {distanceToUser}
-          km from you
+          {' '}
+km from you
         </DistanceText>
       </DistanceWrapper>
     </TextContentWrapper>

@@ -11,6 +11,7 @@ const Wrapper = styled(View)`
   height: 100%;
   justify-content: center;
   align-items: center;
+  position: absolute;
   background-color: ${({ theme }) => theme.colors.darkLayer};
 `;
 

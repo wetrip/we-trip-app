@@ -6,6 +6,45 @@ import { View } from 'react-native';
 import CONSTANTS from '../../../utils/CONSTANTS';
 import HomeComponent from './components/HomeComponent';
 
+const PLACES = [
+  {
+    location: {
+      latitude: -3.8406333,
+      longitude: -38.5606571,
+    },
+    isOpen: true,
+    imageURL:
+      'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/coco-bambu-sul.jpeg',
+    name: 'Place 01',
+    distanceToUser: 4,
+    id: '1',
+  },
+  {
+    location: {
+      latitude: -3.7273013,
+      longitude: -38.5897033,
+    },
+    isOpen: false,
+    imageURL:
+      'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/misaki.jpeg',
+    distanceToUser: 1.1,
+    name: 'Place 02',
+    id: '2',
+  },
+  {
+    location: {
+      latitude: -3.7451878,
+      longitude: -38.5736122,
+    },
+    isOpen: true,
+    imageURL:
+      'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/cabana-riomar.jpeg',
+    distanceToUser: 3.7,
+    name: 'Place 03',
+    id: '3',
+  },
+];
+
 class HomeContainer extends Component {
   _flatListRef: Object = {};
 
@@ -67,6 +106,7 @@ class HomeContainer extends Component {
         shouldShowDarkLayer={shouldShowDarkLayer}
         onSetFlatListRef={this.onSetFlatListRef}
         onPressListItem={this.onPressListItem}
+        places={PLACES}
       />
     );
   }
