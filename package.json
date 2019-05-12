@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "build-android": "cd android && ./gradlew assembleRelease && cd .. && react-native run-android --variant=release",
+    "start:clean": "react-native start --reset-cache",
     "test": "jest"
   },
   "dependencies": {

@@ -119,8 +119,6 @@ class HomeContainer extends Component {
     this.setState({
       isFilterOpen: !isFilterOpen,
     });
-
-    console.tron.log('onToggleFilter');
   };
 
   onChooseScreenIndex = (index: number): void => {
@@ -149,7 +147,7 @@ class HomeContainer extends Component {
   };
 
   render() {
-    const { shouldShowDarkLayer, mapHeight } = this.state;
+    const { shouldShowDarkLayer, isFilterOpen, mapHeight } = this.state;
 
     return (
       <HomeComponent
@@ -157,6 +155,8 @@ class HomeContainer extends Component {
         onSetFlatListRef={this.onSetFlatListRef}
         onPressListItem={this.onPressListItem}
         onSetMapHeight={this.onSetMapHeight}
+        onToggleFilter={this.onToggleFilter}
+        isFilterOpen={isFilterOpen}
         mapHeight={mapHeight}
         places={PLACES}
       />

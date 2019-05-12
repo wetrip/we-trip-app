@@ -6,6 +6,7 @@ import styled from 'styled-components';
 
 import ListScreen from './list/PlacesList';
 import MapScreen from './map/PlacesMap';
+import Filter from './filter/Filter';
 
 const Wrapper = styled(View)`
   flex: 1;
@@ -34,7 +35,9 @@ type Props = {
   shouldShowDarkLayer: boolean,
   onSetFlatListRef: Function,
   onPressListItem: Function,
+  onToggleFilter: Function,
   onSetMapHeight: Function,
+  isFilterOpen: boolean,
   places: Array<Object>,
   mapHeight: number,
 };
@@ -43,7 +46,9 @@ const HomeComponent = ({
   shouldShowDarkLayer,
   onSetFlatListRef,
   onPressListItem,
+  onToggleFilter,
   onSetMapHeight,
+  isFilterOpen,
   mapHeight,
   places,
 }: Props): Object => (
@@ -76,6 +81,10 @@ const HomeComponent = ({
       />
     </ContentWrapper>
     {shouldShowDarkLayer && <DarkLayer />}
+    <Filter
+      onToggleFilter={onToggleFilter}
+      isVisible={isFilterOpen}
+    />
   </Wrapper>
 );
 
