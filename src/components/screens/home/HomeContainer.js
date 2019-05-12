@@ -3,8 +3,9 @@
 import React, { Fragment, Component } from 'react';
 import { View } from 'react-native';
 
-import CONSTANTS from '../../../utils/CONSTANTS';
 import HomeComponent from './components/HomeComponent';
+import CONSTANTS from '../../../utils/CONSTANTS';
+import appStyles from '../../../styles';
 
 const PLACES = [
   {
@@ -43,15 +44,52 @@ const PLACES = [
     name: 'Place 03',
     id: '3',
   },
+  {
+    location: {
+      latitude: -3.8406333,
+      longitude: -38.5606571,
+    },
+    isOpen: true,
+    imageURL:
+      'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/coco-bambu-sul.jpeg',
+    name: 'Place 01',
+    distanceToUser: 4,
+    id: '12',
+  },
+  {
+    location: {
+      latitude: -3.7273013,
+      longitude: -38.5897033,
+    },
+    isOpen: false,
+    imageURL:
+      'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/misaki.jpeg',
+    distanceToUser: 1.1,
+    name: 'Place 02',
+    id: '22',
+  },
+  {
+    location: {
+      latitude: -3.7451878,
+      longitude: -38.5736122,
+    },
+    isOpen: true,
+    imageURL:
+      'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/cabana-riomar.jpeg',
+    distanceToUser: 3.7,
+    name: 'Place 03',
+    id: '23',
+  },
 ];
 
 class HomeContainer extends Component {
-  _flatListRef: Object = {};
+  _outterListRef: Object = {};
 
   state = {
     shouldShowDarkLayer: false,
     indexScreenSelected: 0,
     isFilterOpen: false,
+    mapHeight: 0,
   };
 
   componentDidMount() {
@@ -90,22 +128,36 @@ class HomeContainer extends Component {
       {
         indexScreenSelected: index,
       },
-      () => this._flatListRef.scrollToIndex({ animated: true, index }),
+      () => {
+        this._outterListRef.scrollTo({
+          x: this.state.indexScreenSelected * appStyles.metrics.width,
+          y: 0,
+          animated: true,
+        });
+      },
     );
   };
 
   onSetFlatListRef = (ref: Object): void => {
-    this._flatListRef = ref;
+    this._outterListRef = ref;
+  };
+
+  onSetMapHeight = (mapHeight: number): void => {
+    this.setState({
+      mapHeight,
+    });
   };
 
   render() {
-    const { shouldShowDarkLayer } = this.state;
+    const { shouldShowDarkLayer, mapHeight } = this.state;
 
     return (
       <HomeComponent
         shouldShowDarkLayer={shouldShowDarkLayer}
         onSetFlatListRef={this.onSetFlatListRef}
         onPressListItem={this.onPressListItem}
+        onSetMapHeight={this.onSetMapHeight}
+        mapHeight={mapHeight}
         places={PLACES}
       />
     );

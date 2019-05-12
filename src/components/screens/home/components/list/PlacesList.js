@@ -17,7 +17,6 @@ type Props = {
 
 const PlacesList = ({ onPressListItem, places }: Props): Object => (
   <List
-    showsVerticalScrollIndicator={false}
     keyExtractor={item => `${item.id}`}
     data={places}
     renderItem={({ item, index }) => (

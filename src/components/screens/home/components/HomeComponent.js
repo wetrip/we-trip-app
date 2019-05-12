@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { FlatList, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import styled from 'styled-components';
 
 import ListScreen from './list/PlacesList';
@@ -14,9 +14,8 @@ const Wrapper = styled(View)`
   position: absolute;
 `;
 
-const ContentWrapper = styled(View)`
+const ContentWrapper = styled(ScrollView)`
   flex: 1;
-  flex-direction: row;
 `;
 
 const DarkLayer = styled(View)`
@@ -35,47 +34,47 @@ type Props = {
   shouldShowDarkLayer: boolean,
   onSetFlatListRef: Function,
   onPressListItem: Function,
+  onSetMapHeight: Function,
   places: Array<Object>,
+  mapHeight: number,
 };
 
 const HomeComponent = ({
   shouldShowDarkLayer,
   onSetFlatListRef,
   onPressListItem,
+  onSetMapHeight,
+  mapHeight,
   places,
 }: Props): Object => (
   <Wrapper>
-    <ContentWrapper>
-      <MapScreen
-        onNavigateToMainStack={this.onNavigateToMainStack}
+    <ContentWrapper
+      ref={(ref: any): void => onSetFlatListRef(ref)}
+      onLayout={({
+        nativeEvent: {
+          layout: { height },
+        },
+      }) => {
+        if (mapHeight === 0) {
+          onSetMapHeight(height);
+        }
+      }}
+      showsHorizontalScrollIndicator={false}
+      scrollEnabled={false}
+      pagingEnabled
+      horizontal
+    >
+      <ListScreen
         onPressListItem={onPressListItem}
         places={places}
       />
+      <MapScreen
+        onNavigateToMainStack={this.onNavigateToMainStack}
+        onPressListItem={onPressListItem}
+        mapHeight={mapHeight}
+        places={places}
+      />
     </ContentWrapper>
-    {/* <FlatList
-      renderItem={({ item }) => {
-        const { Layout } = item;
-
-        return (
-          <ContentWrapper>
-            <Layout
-              onNavigateToMainStack={this.onNavigateToMainStack}
-              onChangeListIndex={this.onChangeListIndex}
-              onPressListItem={onPressListItem}
-              places={PLACES}
-            />
-          </ContentWrapper>
-        );
-      }}
-      showsHorizontalScrollIndicator={false}
-      keyExtractor={item => `${item.id}`}
-      ref={(ref: any): void => onSetFlatListRef(ref)}
-      scrollEnabled={false}
-      nestedScrollEnabled
-      data={LAYOUTS}
-      pagingEnabled
-      horizontal
-    /> */}
     {shouldShowDarkLayer && <DarkLayer />}
   </Wrapper>
 );
