@@ -25,7 +25,7 @@ const Container = styled(View)`
 
 const MapContainer = styled(MapView)`
   width: 100%;
-  height: ${({ isGettingUserLocation, isMapReady, height, theme }) => {
+  height: ${({ isMapReady, height, theme }) => {
     if (!isMapReady || height === 0) {
       return theme.metrics.height;
     }
@@ -171,17 +171,18 @@ class PlacesMap extends PureComponent<Props, State> {
             this._mapRef = ref;
           }}
         >
-          {userLocation && (
-            <Directions
-              onReady={this.onFitMapCoordinates}
-              origin={userLocation}
-              destination={
-                places[indexPlaceSelected]
-                && places[indexPlaceSelected].location
-              }
-            />
-          )}          
-          {isMapReady && (
+        {(isMapReady && this._mapRef) && (
+          <Fragment>
+            {userLocation && (
+              <Directions
+                onReady={this.onFitMapCoordinates}
+                origin={userLocation}
+                destination={
+                  places[indexPlaceSelected]
+                  && places[indexPlaceSelected].location
+                }
+              />
+            )}
             <Marker
               coordinate={
                 places[indexPlaceSelected]
@@ -194,7 +195,8 @@ class PlacesMap extends PureComponent<Props, State> {
               size={36}
             />
           </Marker>
-          )}
+          </Fragment>
+        )}
         </MapContainer>
         <PlacesBottomList
           onChangePlaceSelected={this.onChangePlaceSelected}

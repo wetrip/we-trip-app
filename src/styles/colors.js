@@ -2,6 +2,7 @@ export default {
   primaryColor: 'rgba(0, 0, 0, 0.8)',
   secondaryColor: '#F2F2F2',
   androidToolbarColor: '#F2F2F2',
+  contrastColor: '#DE3C4B',
   textColor: 'rgba(0, 0, 0, 0.8)',
   darkLayer: 'rgba(0, 0, 0, 0.5)',
   subText: 'rgba(0, 0, 0, 0.6)',
