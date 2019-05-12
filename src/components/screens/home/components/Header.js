@@ -6,8 +6,9 @@ import {
 } from 'react-native';
 import styled from 'styled-components';
 
-import CONSTANTS from '../../../../utils/CONSTANTS';
+import isEqualsOrLargestThanIphoneX from '../../../../utils/isEqualsOrLargestThanIphoneX';
 import SearchPlaceTextInput from './SearchPlaceTextInput';
+import CONSTANTS from '../../../../utils/CONSTANTS';
 import appStyles from '../../../../styles';
 import Icon from '../../../common/Icon';
 
@@ -16,7 +17,11 @@ const Wrapper = styled(View)`
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
-  margin-top: ${Platform.OS == 'ios' ? 20 : 0}px;
+  margin-top: ${Platform.OS === 'ios'
+    ? isEqualsOrLargestThanIphoneX()
+      ? 30
+      : 20
+    : 0}px;
 `;
 
 type State = {
