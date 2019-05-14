@@ -2,7 +2,10 @@ import React from 'react';
 import { createStackNavigator } from 'react-navigation';
 import { Platform } from 'react-native';
 
+import PlaceDetail from '../../common/place-detail/PlaceDetailContainer';
+import CONSTANTS from '../../../utils/CONSTANTS';
 import Header from './components/Header';
+import appStyles from '../../../styles';
 import Home from './HomeContainer';
 
 const ROUTE_NAMES = {
@@ -14,10 +17,23 @@ const RootStack = createStackNavigator(
     [ROUTE_NAMES.HOME]: {
       screen: Home,
       navigationOptions: ({ navigation }) => ({
+        headerBackTitle: null,
         header: props => <Header
           {...props}
           navigation={navigation}
         />,
+      }),
+    },
+
+    [CONSTANTS.ROUTES.PLACE_DETAIL]: {
+      screen: PlaceDetail,
+      navigationOptions: () => ({
+        headerTintColor: appStyles.colors.textColor,
+        headerTransparent: true,
+        headerStyle: {
+          backgroundColor: 'transparent',
+          borderBottomWidth: 0,
+        },
       }),
     },
   },

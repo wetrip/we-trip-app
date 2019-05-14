@@ -104,7 +104,11 @@ class HomeContainer extends Component {
   }
 
   onPressListItem = (id: string): void => {
-    console.tron.log(id);
+    const { navigation } = this.props;
+
+    navigation.navigate(CONSTANTS.ROUTES.PLACE_DETAIL, {
+      [CONSTANTS.PARAMS.PLACE_ID]: id,
+    });
   };
 
   onToggleDarkLayer = (shouldShowDarkLayer: boolean): void => {
