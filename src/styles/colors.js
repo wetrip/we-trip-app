@@ -1,8 +1,8 @@
 export default {
   primaryColor: 'rgba(0, 0, 0, 0.8)',
-  secondaryColor: '#F2F2F2',
+  secondaryColor: '#F4F4F4',
   androidToolbarColor: '#F2F2F2',
-  contrastColor: '#DE3C4B',
+  contrastColor: '#FB1A1A',
   textColor: 'rgba(0, 0, 0, 0.8)',
   darkLayer: 'rgba(0, 0, 0, 0.5)',
   subText: 'rgba(0, 0, 0, 0.5)',

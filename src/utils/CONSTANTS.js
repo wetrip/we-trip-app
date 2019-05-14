@@ -26,6 +26,34 @@ const VALUES = {
   },
   LONGITUDE_DELTA,
   LATITUDE_DELTA,
+  TYPE_TRANSPORTS: {
+    1: {
+      icon: 'train',
+      label: 'Comboio',
+    },
+    2: {
+      icon: 'subway',
+      label: 'Metro',
+    },
+    3: {
+      icon: 'tram',
+      label: 'Eletrico',
+    },
+    4: {
+      label: 'Auto-Carro',
+      icon: 'bus',
+    },
+    5: {
+      label: 'Barca',
+      icon: 'ferry',
+    },
+  },
+  TYPE_PRICES_TICKETS: {
+    1: 'Adult',
+    2: 'Senior',
+    3: 'Child',
+    4: 'Students',
+  },
 };
 
 export default {

@@ -4,83 +4,119 @@ import React, { PureComponent } from 'react';
 import { FlatList, View } from 'react-native';
 import styled from 'styled-components';
 
+import CONSTANTS from '../../../../../../utils/CONSTANTS';
 import TransportListItem from './TransportsListItem';
 import TicketListItem from './TicketListItem';
 import SectionTitle from '../../SectionTitle';
 
 const TRANSPORTS = [
   {
-    label: 'Comboio',
-    id: 'comboio',
-    icon: 'train',
-    tickets: Array(14)
-      .fill({
-        operatingHourStart: '05:00',
-        operatingHourEnd: '18:00',
-        destination: 'Destination Comboio 01',
-        origin: 'Origin Comboio 01',
-        title: 'First Comboio',
-        price: 12.99,
-      })
-      .map((item, index) => ({ ...item, id: index })),
-  },
-  {
-    label: 'Metro',
-    id: 'metro',
-    icon: 'subway',
+    transportTypeId: 1,
+    price: '3,99 €',
     tickets: [
       {
-        operatingHourStart: '15:00',
-        operatingHourEnd: '00:00',
-        destination: 'Destination Metro 01',
-        origin: 'Origin Metro 01',
-        title: 'First Metro',
-        price: 2.99,
+        id: 1,
+        stationName: 'Carnide',
+        description: 'Blue Line',
+        isDiurnal: true,
+        isNocturne: false,
+        isAccessible: true,
+      },
+      {
+        id: 2,
+        stationName: 'Lumiar',
+        description: 'Yellow Line',
+        isDiurnal: false,
+        isNocturne: true,
+        isAccessible: true,
       },
     ],
   },
   {
-    label: 'Eletrico',
-    id: 'eletrico',
-    icon: 'tram',
+    transportTypeId: 2,
+    price: '2,99 €',
     tickets: [
       {
-        operatingHourStart: '10:00',
-        operatingHourEnd: '21:00',
-        destination: 'Destination Eletrico 01',
-        origin: 'Origin Eletrico 01',
-        title: 'First Eletrico',
-        price: 3.99,
+        id: 3,
+        stationName: 'Moscavide',
+        description: 'Red Line',
+        isDiurnal: false,
+        isNocturne: true,
+        isAccessible: true,
       },
     ],
   },
   {
-    label: 'Auto-Carro',
-    id: 'auto-carro',
-    icon: 'bus',
+    transportTypeId: 3,
+    price: '3,99 €',
     tickets: [
       {
-        operatingHourStart: '05:00',
-        operatingHourEnd: '18:00',
-        destination: 'Destination Auto-Carro 01',
-        origin: 'Origin Auto-Carro 01',
-        title: 'First Auto-Carro',
-        price: 8.99,
+        id: 1,
+        stationName: 'Rossio',
+        description: 'Green Line',
+        isDiurnal: true,
+        isNocturne: false,
+        isAccessible: true,
+      },
+      {
+        id: 2,
+        stationName: 'Reboleira',
+        description: 'Blue Line',
+        isDiurnal: true,
+        isNocturne: false,
+        isAccessible: true,
       },
     ],
   },
   {
-    label: 'Barca',
-    id: 'barca',
-    icon: 'ferry',
+    transportTypeId: 4,
+    price: '8,99 €',
     tickets: [
       {
-        operatingHourStart: '05:00',
-        operatingHourEnd: '18:00',
-        destination: 'Destination Barca 01',
-        origin: 'Origin Barca 01',
-        title: 'First Barca',
-        price: 62.99,
+        id: 1,
+        stationName: 'Anjos',
+        isDiurnal: false,
+        isNocturne: true,
+        description: 'Green Line',
+        isAccessible: true,
+      },
+      {
+        id: 2,
+        stationName: 'Be',
+        description: 'Green Line',
+        isDiurnal: false,
+        isNocturne: true,
+        isAccessible: false,
+      },
+    ],
+  },
+  {
+    transportTypeId: 5,
+    price: '62,99 €',
+    tickets: [
+      {
+        id: 1,
+        stationName: 'Lumiar',
+        description: 'Yellow Line',
+        isAccessible: false,
+        isDiurnal: true,
+        isNocturne: false,
+      },
+      {
+        id: 2,
+        stationName: 'Praça de Espanha',
+        description: 'Blue Line',
+        isAccessible: true,
+        isDiurnal: false,
+        isNocturne: true,
+      },
+      {
+        id: 3,
+        stationName: 'Picoas',
+        description: 'Yellow Line',
+        isAccessible: false,
+        isDiurnal: true,
+        isNocturne: false,
       },
     ],
   },
@@ -115,24 +151,30 @@ class Transports extends PureComponent {
   renderTransportsList = (indexTransportSelected: number): Object => (
     <List
       showsHorizontalScrollIndicator={false}
-      keyExtractor={item => `${item.id}`}
+      keyExtractor={item => `${item.transportTypeId}`}
       extraData={this.state}
       data={TRANSPORTS}
       horizontal
-      renderItem={({ item, index }) => (
-        <TransportListItem
-          isSelected={index === indexTransportSelected}
-          onSelectItem={() => this.onSelectItem(index)}
-          isFirst={index === 0}
-          label={item.label}
-          icon={item.icon}
-        />
-      )}
+      renderItem={({ item, index }) => {
+        const { icon, label } = CONSTANTS.VALUES.TYPE_TRANSPORTS[
+          item.transportTypeId
+        ];
+
+        return (
+          <TransportListItem
+            isSelected={index === indexTransportSelected}
+            onSelectItem={() => this.onSelectItem(index)}
+            isFirst={index === 0}
+            label={label}
+            icon={icon}
+          />
+        );
+      }}
     />
   );
 
   renderTicketsList = (indexTransportSelected: number): Object => {
-    const { tickets } = TRANSPORTS[indexTransportSelected];
+    const { tickets, price } = TRANSPORTS[indexTransportSelected];
 
     return (
       <List
@@ -141,12 +183,12 @@ class Transports extends PureComponent {
         data={tickets}
         renderItem={({ item }) => (
           <TicketListItem
-            operatingHourStart={item.operatingHourStart}
-            operatingHourEnd={item.operatingHourEnd}
-            destination={item.destination}
-            origin={item.origin}
-            title={item.title}
-            price={item.price}
+            stationName={item.stationName}
+            isAccessible={item.isAccessible}
+            description={item.description}
+            isNocturne={item.isNocturne}
+            isDiurnal={item.isDiurnal}
+            price={price}
           />
         )}
       />

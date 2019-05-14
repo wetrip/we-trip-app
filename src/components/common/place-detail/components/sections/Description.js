@@ -4,8 +4,8 @@ import React, { Fragment } from 'react';
 import { Text, View } from 'react-native';
 import styled from 'styled-components';
 
-import SectionWrapper from '../../SectionWrapper';
-import SectionTitle from '../../SectionTitle';
+import SectionWrapper from '../SectionWrapper';
+import SectionTitle from '../SectionTitle';
 
 const DescriptionText = styled(Text)`
   font-weight: 600;
@@ -17,7 +17,7 @@ type Props = {
   description: string,
 };
 
-const PlaceDescription = ({ description }: Props): Object => (
+const Description = ({ description }: Props): Object => (
   <Fragment>
     <SectionTitle>Description</SectionTitle>
     <SectionWrapper>
@@ -26,4 +26,4 @@ const PlaceDescription = ({ description }: Props): Object => (
   </Fragment>
 );
 
-export default PlaceDescription;
+export default Description;

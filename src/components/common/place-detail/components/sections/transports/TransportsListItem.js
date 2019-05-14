@@ -35,6 +35,7 @@ type Props = {
   isFirst: boolean,
   label: string,
   icon: string,
+  id: number,
 };
 
 const TransportsListItem = ({
