@@ -16,7 +16,7 @@ const Title = styled(Text)`
 
 type Props = {
   withMarginTop: boolean,
-  children: Object,
+  children: string,
 };
 
 const SectionTitle = ({ withMarginTop, children }: Props): Object => (
