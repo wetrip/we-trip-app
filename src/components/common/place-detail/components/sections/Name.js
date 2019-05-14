@@ -4,7 +4,7 @@ import React from 'react';
 import { Text } from 'react-native';
 import styled from 'styled-components';
 
-const PlaceNameText = styled(Text).attrs({
+const NameText = styled(Text).attrs({
   numberOfLines: 2,
 })`
   margin-horizontal: ${({ theme }) => theme.metrics.mediumSize}px;
@@ -17,8 +17,6 @@ type Props = {
   children: string,
 };
 
-const PlaceName = ({ children }: Props): Object => (
-  <PlaceNameText>{children}</PlaceNameText>
-);
+const Name = ({ children }: Props): Object => <NameText>{children}</NameText>;
 
-export default PlaceName;
+export default Name;

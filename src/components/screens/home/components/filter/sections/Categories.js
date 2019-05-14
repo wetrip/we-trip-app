@@ -8,8 +8,7 @@ import appStyles from '../../../../../../styles';
 import SectionTitle from '../SectionTitle';
 
 const Container = styled(View)`
-  padding-right: ${({ theme }) => theme.metrics.largeSize}px;
-  padding-left: ${({ theme }) => theme.metrics.largeSize}px;
+  padding-horizontal: ${({ theme }) => theme.metrics.largeSize}px;
 `;
 
 const CategoriesWrapper = styled(View)`

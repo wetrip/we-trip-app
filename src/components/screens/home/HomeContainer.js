@@ -154,16 +154,17 @@ class HomeContainer extends Component {
     const { shouldShowDarkLayer, isFilterOpen, mapHeight } = this.state;
 
     return (
-      <HomeComponent
-        shouldShowDarkLayer={shouldShowDarkLayer}
-        onSetFlatListRef={this.onSetFlatListRef}
-        onPressListItem={this.onPressListItem}
-        onSetMapHeight={this.onSetMapHeight}
-        onToggleFilter={this.onToggleFilter}
-        isFilterOpen={isFilterOpen}
-        mapHeight={mapHeight}
-        places={PLACES}
-      />
+      <View />
+      // <HomeComponent
+      //   shouldShowDarkLayer={shouldShowDarkLayer}
+      //   onSetFlatListRef={this.onSetFlatListRef}
+      //   onPressListItem={this.onPressListItem}
+      //   onSetMapHeight={this.onSetMapHeight}
+      //   onToggleFilter={this.onToggleFilter}
+      //   isFilterOpen={isFilterOpen}
+      //   mapHeight={mapHeight}
+      //   places={PLACES}
+      // />
     );
   }
 }

@@ -15,6 +15,10 @@ const Wrapper = styled(View)`
   border-radius: 5px;
 `;
 
+const ExtraInfoWrapper = styled(View)`
+  margin-vertical: ${({ theme }) => theme.metrics.smallSize}px;
+`;
+
 const Row = styled(View)`
   flex-direction: row;
   align-items: center;
@@ -27,19 +31,20 @@ const BottomContent = styled(View)`
   align-items: flex-end;
 `;
 
-const TicketTitle = styled(Text).attrs({
-  numberOfLines: 2,
+const StationTitle = styled(Text).attrs({
+  numberOfLines: 1,
 })`
+  margin-right: ${({ isTitle, theme }) => (isTitle ? theme.metrics.smallSize : 0)}px;
   font-size: ${({ theme }) => theme.metrics.extraLargeSize};
   font-weight: 700;
-  color: ${({ theme }) => theme.colors.textColor};
+  color: ${({ isTitle, theme }) => (isTitle ? theme.colors.textColor : theme.colors.subText)};
 `;
 
 const DefaultText = styled(Text).attrs({
-  numberOfLines: 1, 
+  numberOfLines: 1,
 })`
-  margin-horizontal: ${({ theme }) => theme.metrics.extraSmallSize}px;
-  font-size: ${({ theme }) => theme.metrics.largeSize};
+  margin-left: ${({ theme }) => theme.metrics.smallSize}px;
+  font-size: ${({ theme }) => 1.1 * theme.metrics.largeSize};
   font-weight: 600;
   color: ${({ theme }) => theme.colors.subText};
 `;
@@ -59,60 +64,51 @@ const BottomLine = styled(View)`
 `;
 
 type Props = {
-  operatingHourStart: string,
-  operatingHourEnd: string,
-  destination: string,
-  origin: string,
-  title: string,
-  price: number,
+  isAccessible: boolean,
+  stationName: string,
+  isNocturne: boolean,
+  description: string,
+  isDiurnal: boolean,
+  price: string,
 };
 
+const renderTextWithIconRow = (text: string, iconName: string): Object => (
+  <Row>
+    <Icon
+      name={iconName}
+      color={appStyles.colors.contrastColor}
+      size={22}
+    />
+    <DefaultText>{text}</DefaultText>
+  </Row>
+);
+
 const TicketListItem = ({
-  operatingHourStart,
-  operatingHourEnd,
-  destination,
-  origin,
-  title,
+  isNocturne,
+  isDiurnal,
+  stationName,
+  description,
+  isAccessible,
   price,
 }: Props): Object => (
   <Wrapper>
-    <View>
-      <TicketTitle>{title}</TicketTitle>
-      <Row
-        withMargin
+    {console.tron.log(isAccessible)}
+    <Row>
+      <StationTitle
+        isTitle
       >
-        <Icon
-          name="directions"
-          color={appStyles.colors.red}
-          size={26}
-        />
-        <DefaultText>{origin}</DefaultText>
-        <Icon
-          name="arrow-right"
-          color={appStyles.colors.subText}
-          size={26}
-        />
-        <DefaultText>{destination}</DefaultText>
-      </Row>
-      <Row>
-        <Icon
-          name="clock-outline"
-          color={appStyles.colors.red}
-          size={26}
-        />
-        <DefaultText>{`${operatingHourStart} - ${operatingHourEnd}`}</DefaultText>
-      </Row>
-    </View>
+Station:
+      </StationTitle>
+      <StationTitle>{stationName}</StationTitle>
+    </Row>
+    <ExtraInfoWrapper>
+      {renderTextWithIconRow(isNocturne ? 'Nocturn' : 'Diurnal', 'clock-outline')}
+      {renderTextWithIconRow(description, 'chart-line-variant')}
+      {renderTextWithIconRow(isAccessible ? 'Accessible' : 'Not Accessible', 'wheelchair-accessibility')}
+    </ExtraInfoWrapper>
     <BottomLine />
     <BottomContent>
-      <Row>
-        <Icon
-          name="currency-eur"
-          color={appStyles.colors.textColor}
-          size={26}
-        />
-        <TicketValue>{price}</TicketValue>
-      </Row>
+      <TicketValue>{price}</TicketValue>
     </BottomContent>
   </Wrapper>
 );

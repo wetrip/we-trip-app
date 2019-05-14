@@ -4,12 +4,14 @@ import React from 'react';
 import { ScrollView, Platform, View } from 'react-native';
 import styled from 'styled-components';
 
-import ImagesList from './sections/images-list/PlaceImagesList';
-import Description from './sections/description/PlaceDescription';
+import ImagesList from './sections/images-list/ImagesList';
+import Description from './sections/Description';
 import Transports from './sections/transports/Transports';
 import Location from './sections/location/Location';
-import Name from './sections/place-name/PlaceName';
-import Prices from './sections/prices/Prices';
+import Categories from './sections/Categories';
+import Prices from './sections/Prices';
+import Name from './sections/Name';
+
 import appStyles from '../../../../styles';
 
 const ContentWrapper = styled(ScrollView)`
@@ -17,6 +19,13 @@ const ContentWrapper = styled(ScrollView)`
   height: 100%;
   background-color: ${({ theme }) => theme.colors.secondaryColor};
 `;
+
+const CATEGORIES = Array(5)
+  .fill({})
+  .map((item, index) => ({
+    id: `${index}`,
+    name: `Category ${index + 1}`,
+  }));
 
 const PlaceDetailComponent = (): Object => (
   <ContentWrapper
@@ -30,6 +39,9 @@ const PlaceDetailComponent = (): Object => (
   >
     <Name>Stenio Wagner Pereira de Freitas</Name>
     <ImagesList />
+    <Categories
+      categories={CATEGORIES}
+    />
     <Description
       description="Alfama é o mais antigo e um dos mais típicos bairros da cidade de Lisboa. Actualmente, abrange uma parte da freguesia de Santa Maria Maior e outra da freguesia de São Vicente."
     />
