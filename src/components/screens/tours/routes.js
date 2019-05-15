@@ -1,7 +1,7 @@
 import { createStackNavigator } from 'react-navigation';
 import { Platform } from 'react-native';
 
-import Tours from './Tours';
+import Tours from './ToursContainer';
 
 const ROUTE_NAMES = {
   TOURS: 'TOURS',
@@ -12,7 +12,7 @@ const RootStack = createStackNavigator(
     [ROUTE_NAMES.TOURS]: {
       screen: Tours,
       navigationOptions: ({ navigation }) => ({
-        title: 'TOURS',
+        title: 'Tours',
       }),
     },
   },
