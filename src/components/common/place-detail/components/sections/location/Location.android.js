@@ -7,6 +7,7 @@ import styled from 'styled-components';
 
 import appStyles from '../../../../../../styles';
 import SectionTitle from '../../SectionTitle';
+import DefaultText from '../../DefaultText';
 import OpenMapButton from './OpenMapButton';
 import Icon from '../../../../Icon';
 
@@ -58,7 +59,14 @@ const Location = (): Object => (
         name="map-marker"
         size={25}
       />
-      <AddressText>R. da Saudade 43-15 - Lisboa, Portugal</AddressText>
+      <DefaultText
+        color={appStyles.colors.subText}
+        withMarginLeft
+        withMarginRight
+        weight={600}
+      >
+        R. da Saudade 43-15 - Lisboa, Portugal Lisboa, Portugal
+      </DefaultText>
     </AddressWrapper>
     <Wrapper>
       <MapContainer

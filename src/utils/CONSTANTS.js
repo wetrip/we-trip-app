@@ -54,6 +54,15 @@ const VALUES = {
     3: 'Child',
     4: 'Students',
   },
+  DAYS_OF_WEEK: {
+    0: 'MON',
+    1: 'TUE',
+    2: 'WED',
+    3: 'THR',
+    4: 'FRI',
+    5: 'SAT',
+    6: 'SUN',
+  },
 };
 
 export default {

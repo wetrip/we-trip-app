@@ -1,17 +1,12 @@
 // @flow
 
 import React, { Fragment } from 'react';
-import { Text, View } from 'react-native';
-import styled from 'styled-components';
+import { Platform, Text, View } from 'react-native';
 
 import SectionWrapper from '../SectionWrapper';
+import appStyles from '../../../../../styles';
 import SectionTitle from '../SectionTitle';
-
-const DescriptionText = styled(Text)`
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.subText};
-  font-size: ${({ theme }) => theme.metrics.largeSize};
-`;
+import DefaultText from '../DefaultText';
 
 type Props = {
   description: string,
@@ -21,7 +16,15 @@ const Description = ({ description }: Props): Object => (
   <Fragment>
     <SectionTitle>Description</SectionTitle>
     <SectionWrapper>
-      <DescriptionText>{description}</DescriptionText>
+      <DefaultText
+        color={appStyles.colors.subText}
+        weight={Platform.select({
+          android: 400,
+          ios: 500,
+        })}
+      >
+        {description}
+      </DefaultText>
     </SectionWrapper>
   </Fragment>
 );

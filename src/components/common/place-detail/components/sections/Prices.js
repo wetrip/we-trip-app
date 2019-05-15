@@ -8,18 +8,12 @@ import CONSTANTS from '../../../../../utils/CONSTANTS';
 import SectionWrapper from '../SectionWrapper';
 import appStyles from '../../../../../styles';
 import SectionTitle from '../SectionTitle';
+import DefaultText from '../DefaultText';
 
 const Row = styled(View)`
   flex-direction: row;
   align-items: center;
   margin-bottom: ${({ isLast, theme }) => (isLast ? 0 : theme.metrics.mediumSize)}px;
-`;
-
-const DefaultText = styled(Text)`
-  margin-right: ${({ theme }) => theme.metrics.smallSize}px;
-  font-size: ${({ theme }) => 1.5 * theme.metrics.mediumSize}px;
-  color: ${({ isMainText, theme }) => (isMainText ? theme.colors.textColor : theme.colors.subText)};
-  font-weight: ${({ isMainText }) => (isMainText ? 700 : 500)};
 `;
 
 const PRICES = [
@@ -54,11 +48,18 @@ const Prices = (): Object => (
             key={item.PriceTypeId}
           >
             <DefaultText
-              isMainText
+              color={appStyles.colors.textColor}
+              withMarginRight
+              weight={800}
             >
               {`${label}:`}
             </DefaultText>
-            <DefaultText>{item.price}</DefaultText>
+            <DefaultText
+              color={appStyles.colors.subText}
+              weight={600}
+            >
+              {item.price}
+            </DefaultText>
           </Row>
         );
       })}
