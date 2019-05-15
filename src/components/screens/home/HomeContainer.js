@@ -101,8 +101,6 @@ class HomeContainer extends Component {
       [CONSTANTS.PARAMS.ON_SEARCH_PLACE]: place => console.tron.log(place),
       [CONSTANTS.PARAMS.TOGGLE_FILTER]: this.onToggleFilter,
     });
-
-    this.onPressListItem();
   }
 
   onPressListItem = (id: string): void => {
@@ -156,17 +154,16 @@ class HomeContainer extends Component {
     const { shouldShowDarkLayer, isFilterOpen, mapHeight } = this.state;
 
     return (
-      <View />
-      // <HomeComponent
-      //   shouldShowDarkLayer={shouldShowDarkLayer}
-      //   onSetFlatListRef={this.onSetFlatListRef}
-      //   onPressListItem={this.onPressListItem}
-      //   onSetMapHeight={this.onSetMapHeight}
-      //   onToggleFilter={this.onToggleFilter}
-      //   isFilterOpen={isFilterOpen}
-      //   mapHeight={mapHeight}
-      //   places={PLACES}
-      // />
+      <HomeComponent
+        shouldShowDarkLayer={shouldShowDarkLayer}
+        onSetFlatListRef={this.onSetFlatListRef}
+        onPressListItem={this.onPressListItem}
+        onSetMapHeight={this.onSetMapHeight}
+        onToggleFilter={this.onToggleFilter}
+        isFilterOpen={isFilterOpen}
+        mapHeight={mapHeight}
+        places={PLACES}
+      />
     );
   }
 }

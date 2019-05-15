@@ -7,6 +7,7 @@ export default {
   darkLayer: 'rgba(0, 0, 0, 0.5)',
   subText: 'rgba(0, 0, 0, 0.5)',
   white: '#FDFDFD',
+  black: '#000',
   defaultWhite: '#FFFFFF',
   inactiveTabIcon: '#909090',
   textInputBackgroundColor: '#E3E3E3',
