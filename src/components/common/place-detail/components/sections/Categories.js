@@ -4,7 +4,9 @@ import React, { Fragment } from 'react';
 import { View, Text } from 'react-native';
 import styled from 'styled-components';
 
+import appStyles from '../../../../../styles';
 import SectionTitle from '../SectionTitle';
+import DefaultText from '../DefaultText';
 
 const Wrapper = styled(View)`
   width: 100%;
@@ -26,12 +28,6 @@ const ContentWrapper = styled(View)`
   background-color: ${({ theme }) => theme.colors.white};
 `;
 
-const CategoryText = styled(Text)`
-  font-size: ${({ theme }) => theme.metrics.largeSize}px;
-  font-weight: 700;
-  color: ${({ theme }) => theme.colors.textColor};
-`;
-
 type Category = {
   name: string,
   id: number,
@@ -49,7 +45,12 @@ const Categories = ({ categories }: Props): Object => (
         <ContentWrapper
           key={category.id}
         >
-          <CategoryText>{category.name}</CategoryText>
+          <DefaultText
+            weight={700}
+            color={appStyles.colors.textColor}
+          >
+            {category.name}
+          </DefaultText>
         </ContentWrapper>
       ))}
     </Wrapper>

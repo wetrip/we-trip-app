@@ -101,6 +101,8 @@ class HomeContainer extends Component {
       [CONSTANTS.PARAMS.ON_SEARCH_PLACE]: place => console.tron.log(place),
       [CONSTANTS.PARAMS.TOGGLE_FILTER]: this.onToggleFilter,
     });
+
+    this.onPressListItem();
   }
 
   onPressListItem = (id: string): void => {

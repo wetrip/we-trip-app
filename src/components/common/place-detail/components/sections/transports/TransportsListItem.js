@@ -25,8 +25,8 @@ const ContentWrapper = styled(View)`
 
 const OptionText = styled(Text)`
   font-size: ${({ theme }) => 1.1 * theme.metrics.mediumSize}px;
-  font-weight: 800;
-  color: ${({ isSelected, theme }) => (isSelected ? theme.colors.white : theme.colors.textColor)};
+  font-weight: 600;
+  color: ${({ color }) => color};
 `;
 
 type Props = {
@@ -44,25 +44,31 @@ const TransportsListItem = ({
   isFirst,
   label,
   icon,
-}: Props): Object => (
-  <Wrapper
-    onPress={onSelectItem}
-    isSelected={isSelected}
-    isFirst={isFirst}
-  >
-    <ContentWrapper>
-      <Icon
-        name={icon}
-        color={isSelected ? appStyles.colors.white : appStyles.colors.textColor}
-        size={38}
-      />
-      <OptionText
-        isSelected={isSelected}
-      >
-        {label}
-      </OptionText>
-    </ContentWrapper>
-  </Wrapper>
-);
+}: Props): Object => {
+  const color = isSelected
+    ? appStyles.colors.white
+    : appStyles.colors.textColor;
+
+  return (
+    <Wrapper
+      onPress={onSelectItem}
+      isSelected={isSelected}
+      isFirst={isFirst}
+    >
+      <ContentWrapper>
+        <Icon
+          name={icon}
+          color={color}
+          size={38}
+        />
+        <OptionText
+          color={color}
+        >
+          {label}
+        </OptionText>
+      </ContentWrapper>
+    </Wrapper>
+  );
+};
 
 export default TransportsListItem;

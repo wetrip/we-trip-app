@@ -1,10 +1,11 @@
 // @flow
 
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Platform, Text } from 'react-native';
 import styled from 'styled-components';
 
 import appStyles from '../../../../../../styles';
+import DefaultText from '../../DefaultText';
 import Icon from '../../../../Icon';
 
 const Wrapper = styled(View)`
@@ -40,15 +41,6 @@ const StationTitle = styled(Text).attrs({
   color: ${({ isTitle, theme }) => (isTitle ? theme.colors.textColor : theme.colors.subText)};
 `;
 
-const DefaultText = styled(Text).attrs({
-  numberOfLines: 1,
-})`
-  margin-left: ${({ theme }) => theme.metrics.smallSize}px;
-  font-size: ${({ theme }) => 1.1 * theme.metrics.largeSize};
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.subText};
-`;
-
 const TicketValue = styled(Text)`
   margin-left: ${({ theme }) => theme.metrics.smallSize}px;
   font-size: ${({ theme }) => 1.3 * theme.metrics.largeSize}px;
@@ -79,7 +71,16 @@ const renderTextWithIconRow = (text: string, iconName: string): Object => (
       color={appStyles.colors.contrastColor}
       size={22}
     />
-    <DefaultText>{text}</DefaultText>
+    <DefaultText
+      color={appStyles.colors.subText}
+      withMarginLeft
+      weight={Platform.select({
+        android: 400,
+        ios: 600,
+      })}
+    >
+      {text}
+    </DefaultText>
   </Row>
 );
 
@@ -92,7 +93,6 @@ const TicketListItem = ({
   price,
 }: Props): Object => (
   <Wrapper>
-    {console.tron.log(isAccessible)}
     <Row>
       <StationTitle
         isTitle
@@ -102,9 +102,15 @@ Station:
       <StationTitle>{stationName}</StationTitle>
     </Row>
     <ExtraInfoWrapper>
-      {renderTextWithIconRow(isNocturne ? 'Nocturn' : 'Diurnal', 'clock-outline')}
+      {renderTextWithIconRow(
+        isNocturne ? 'Nocturn' : 'Diurnal',
+        'clock-outline',
+      )}
       {renderTextWithIconRow(description, 'chart-line-variant')}
-      {renderTextWithIconRow(isAccessible ? 'Accessible' : 'Not Accessible', 'wheelchair-accessibility')}
+      {renderTextWithIconRow(
+        isAccessible ? 'Accessible' : 'Not Accessible',
+        'wheelchair-accessibility',
+      )}
     </ExtraInfoWrapper>
     <BottomLine />
     <BottomContent>
