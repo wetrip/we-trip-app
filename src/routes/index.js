@@ -60,7 +60,7 @@ const AppTabs = createMaterialTopTabNavigator(
     },
   },
   {
-    initialRouteName: ROUTE_NAMES.HOME,
+    initialRouteName: ROUTE_NAMES.TOURS,
     tabBarPosition: 'bottom',
     optimizationsEnabled: true,
     animationEnabled: true,
