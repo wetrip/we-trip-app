@@ -1,7 +1,9 @@
 // @flow
 
 import React, { Component } from 'react';
+
 import ToursComponent from './components/ToursComponent';
+import CONSTANTS from '../../../utils/CONSTANTS';
 
 const TOUR = {
   title: 'Knowing the Coast',
@@ -94,7 +96,11 @@ const TOURS = Array(6)
 
 class ToursContainer extends Component {
   onSelectTour = (tourId: number): void => {
-    console.tron.log(tourId);
+    const { navigation, localRoutes } = this.props;
+
+    navigation.navigate(localRoutes.TOUR_DETAIL, {
+      [CONSTANTS.PARAMS.TOUR_ID]: tourId,
+    });
   };
 
   render() {

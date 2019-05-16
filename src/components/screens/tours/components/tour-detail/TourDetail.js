@@ -1,11 +1,13 @@
 // @flow
 
-import React, { Fragment, Component } from 'react';
-import { View } from 'react-native';
+import React, { Component, Fragment } from 'react';
+import { ScrollView } from 'react-native';
+import styled from 'styled-components';
 
-import HomeComponent from './components/HomeComponent';
-import CONSTANTS from '../../../utils/CONSTANTS';
-import appStyles from '../../../styles';
+import CONSTANTS from '../../../../../utils/CONSTANTS';
+import appStyles from '../../../../../styles';
+import TourList from './ToursList';
+import Header from './Header';
 
 const PLACES = [
   {
@@ -18,7 +20,7 @@ const PLACES = [
       'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/coco-bambu-sul.jpeg',
     name: 'Stenio Wagner Pereira de Freitas Stenio Wagner Pereira de Freitas',
     distanceToUser: 4,
-    id: '1',
+    id: 1,
   },
   {
     location: {
@@ -30,7 +32,7 @@ const PLACES = [
       'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/misaki.jpeg',
     distanceToUser: 1.1,
     name: 'Place 02',
-    id: '2',
+    id: 2,
   },
   {
     location: {
@@ -42,7 +44,7 @@ const PLACES = [
       'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/cabana-riomar.jpeg',
     distanceToUser: 3.7,
     name: 'Place 03',
-    id: '3',
+    id: 3,
   },
   {
     location: {
@@ -54,7 +56,7 @@ const PLACES = [
       'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/coco-bambu-sul.jpeg',
     name: 'Place 01',
     distanceToUser: 4,
-    id: '12',
+    id: 12,
   },
   {
     location: {
@@ -66,7 +68,7 @@ const PLACES = [
       'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/misaki.jpeg',
     distanceToUser: 1.1,
     name: 'Place 02',
-    id: '22',
+    id: 22,
   },
   {
     location: {
@@ -78,51 +80,19 @@ const PLACES = [
       'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/cabana-riomar.jpeg',
     distanceToUser: 3.7,
     name: 'Place 03',
-    id: '23',
+    id: 23,
   },
 ];
 
-class HomeContainer extends Component {
-  _outterListRef: Object = {};
+const ContentWrapper = styled(ScrollView)`
+  flex: 1;
+`;
+
+class TourDetail extends Component {
+  _containerLisRef: Object = null;
 
   state = {
-    shouldShowDarkLayer: false,
     indexScreenSelected: 0,
-    isFilterOpen: false,
-    mapHeight: 0,
-  };
-
-  componentDidMount() {
-    const { navigation } = this.props;
-
-    navigation.setParams({
-      [CONSTANTS.PARAMS.CHANGE_HOME_SCREEN_TYPE]: this.onChooseScreenIndex,
-      [CONSTANTS.PARAMS.ON_TOGGLE_DARK_LAYER]: this.onToggleDarkLayer,
-      [CONSTANTS.PARAMS.ON_SEARCH_PLACE]: place => console.tron.log(place),
-      [CONSTANTS.PARAMS.TOGGLE_FILTER]: this.onToggleFilter,
-    });
-  }
-
-  onPressListItem = (id: string): void => {
-    const { navigation } = this.props;
-
-    navigation.navigate(CONSTANTS.ROUTES.PLACE_DETAIL, {
-      [CONSTANTS.PARAMS.PLACE_ID]: id,
-    });
-  };
-
-  onToggleDarkLayer = (shouldShowDarkLayer: boolean): void => {
-    this.setState({
-      shouldShowDarkLayer,
-    });
-  };
-
-  onToggleFilter = (): void => {
-    const { isFilterOpen } = this.state;
-
-    this.setState({
-      isFilterOpen: !isFilterOpen,
-    });
   };
 
   onChooseScreenIndex = (index: number): void => {
@@ -131,7 +101,7 @@ class HomeContainer extends Component {
         indexScreenSelected: index,
       },
       () => {
-        this._outterListRef.scrollTo({
+        this._containerLisRef.scrollTo({
           x: this.state.indexScreenSelected * appStyles.metrics.width,
           y: 0,
           animated: true,
@@ -140,32 +110,35 @@ class HomeContainer extends Component {
     );
   };
 
-  onSetFlatListRef = (ref: Object): void => {
-    this._outterListRef = ref;
-  };
+  onSelectPlace = (placeId: number): void => {
+    const { navigation } = this.props;
 
-  onSetMapHeight = (mapHeight: number): void => {
-    this.setState({
-      mapHeight,
+    navigation.navigate(CONSTANTS.ROUTES.PLACE_DETAIL, {
+      [CONSTANTS.PARAMS.PLACE_ID]: placeId,
     });
   };
 
   render() {
-    const { shouldShowDarkLayer, isFilterOpen, mapHeight } = this.state;
-
     return (
-      <HomeComponent
-        shouldShowDarkLayer={shouldShowDarkLayer}
-        onSetFlatListRef={this.onSetFlatListRef}
-        onPressListItem={this.onPressListItem}
-        onSetMapHeight={this.onSetMapHeight}
-        onToggleFilter={this.onToggleFilter}
-        isFilterOpen={isFilterOpen}
-        mapHeight={mapHeight}
-        places={PLACES}
-      />
+      <Fragment>
+        <Header />
+        <ContentWrapper
+          ref={(ref: any): void => {
+            _containerLisRef = ref;
+          }}
+          showsHorizontalScrollIndicator={false}
+          scrollEnabled={false}
+          pagingEnabled
+          horizontal
+        >
+          <TourList
+            onSelectPlace={this.onSelectPlace}
+            places={PLACES}
+          />
+        </ContentWrapper>
+      </Fragment>
     );
   }
 }
 
-export default HomeContainer;
+export default TourDetail;

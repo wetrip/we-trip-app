@@ -34,7 +34,7 @@ type Place = {
 };
 
 type Tour = {
-  destinations: Place,
+  destinations: Array<Place>,
   description: string,
   imageURL: string,
   title: string,
@@ -43,7 +43,7 @@ type Tour = {
 
 type Props = {
   onSelectTour: Function,
-  tours: Array<Tours>,
+  tours: Array<Tour>,
 };
 
 const TestComponent = ({ onSelectTour, tours }: Props): Object => (

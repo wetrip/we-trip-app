@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { TouchableOpacity, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import styled from 'styled-components';
 import FastImage from 'react-native-fast-image';
 
@@ -10,14 +10,13 @@ import Icon from './Icon';
 
 const ContentWrapper = styled(View)`
   width: 100%;
+  margin-horizontal: ${({ theme }) => theme.metrics.mediumSize}px;
   height: ${({ theme }) => theme.metrics.getHeightFromDP('16%')}px;
   flex-direction: row;
   align-items: center;
-  padding-horizontal: ${({ theme }) => theme.metrics.mediumSize}PX;
 `;
 
 const TextContentWrapper = styled(View)`
-  width: 70%;
   margin-left: ${({ theme }) => theme.metrics.mediumSize}px;
 `;
 
@@ -29,9 +28,16 @@ const PlaceImage = styled(FastImage).attrs(({ uri }) => ({
   border-radius: 6px;
 `;
 
+const PlaceNameWrapper = styled(View)`
+  width: ${({ theme }) => theme.metrics.getWidthFromDP('58.5%')}px;
+  flex-direction: row;
+`;
+
 const PlaceName = styled(Text).attrs({
   numberOfLines: 2,
 })`
+  flex: 1;
+  flex-wrap: wrap;
   font-size: ${({ theme }) => theme.metrics.getWidthFromDP('5.5%')}px;
   font-weight: 800;
   color: ${({ theme }) => theme.colors.textColor};
@@ -79,7 +85,9 @@ const DefaultPlaceListItem = ({
       uri={imageURL}
     />
     <TextContentWrapper>
-      <PlaceName>{name}</PlaceName>
+      <PlaceNameWrapper>
+        <PlaceName>{name}</PlaceName>
+      </PlaceNameWrapper>
       <PlaceStatus
         isOpen={isOpen}
       >

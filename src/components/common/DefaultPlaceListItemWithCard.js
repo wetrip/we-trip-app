@@ -12,7 +12,7 @@ const Wrapper = styled(TouchableOpacity)`
   align-items: center;
   margin-horizontal: ${({ theme }) => theme.metrics.mediumSize}px;
   margin-bottom: ${({ theme }) => theme.metrics.mediumSize}px;
-  padding-vertical: ${({ theme }) => theme.metrics.mediumSize}px;
+  padding: ${({ theme }) => theme.metrics.mediumSize}px;
   background-color: ${({ theme }) => theme.colors.white};
   border-radius: 6px;
 `;

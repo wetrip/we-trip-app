@@ -13,6 +13,7 @@ const PARAMS = {
   ON_SEARCH_PLACE: 'ON_SEARCH_PLACE',
   TOGGLE_FILTER: 'TOGGLE_FILTER',
   PLACE_ID: 'PLACE_ID',
+  TOUR_ID: 'TOUR_ID',
 };
 
 const ASPECT_RATIO = width / height;
