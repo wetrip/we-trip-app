@@ -4,6 +4,7 @@ import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import styled from 'styled-components';
 
+import isEqualsOrLargestThanIphoneX from '../../utils/isEqualsOrLargestThanIphoneX';
 import DefaultPlaceListItem from './DefaultPlaceListItem';
 
 const Wrapper = styled(TouchableOpacity)`
@@ -11,7 +12,9 @@ const Wrapper = styled(TouchableOpacity)`
   justify-content: center;
   align-items: center;
   margin-horizontal: ${({ theme }) => theme.metrics.mediumSize}px;
-  margin-bottom: ${({ theme }) => theme.metrics.mediumSize}px;
+  margin-bottom: ${({ theme }) => (isEqualsOrLargestThanIphoneX()
+    ? 1.3 * theme.metrics.extraLargeSize
+    : theme.metrics.mediumSize)}px;
   padding: ${({ theme }) => theme.metrics.mediumSize}px;
   background-color: ${({ theme }) => theme.colors.white};
   border-radius: 6px;

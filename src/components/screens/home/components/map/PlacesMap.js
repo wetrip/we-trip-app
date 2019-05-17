@@ -7,13 +7,14 @@ import {
 import styled from 'styled-components';
 
 import MapView, { Marker } from 'react-native-maps';
-import Directions from './Directions';
+import Directions from '../../../../common/Directions';
 
 import getUserLocation from '../../../../../services/location/getUserLocation';
+import { getMapEdgePadding, getInitialRegion } from '../../../../../utils/map';
 import DefaultPlaceListItem from '../../../../common/DefaultPlaceListItem';
+import MapPlacesBottomList from '../../../../common/MapPlacesBottomList';
 import LoadingUserLocation from './LoadingUserLocation';
 import CONSTANTS from '../../../../../utils/CONSTANTS';
-import PlacesBottomList from './PlacesBottomList';
 import appStyles from '../../../../../styles';
 import Icon from '../../../../common/Icon';
 
@@ -82,44 +83,11 @@ class PlacesMap extends PureComponent<Props, State> {
     }
   }
 
-  getInitialRegion = (): Object => ({
-    latitude: CONSTANTS.VALUES.INITIAL_MAP_REGION.latitude,
-    longitude: CONSTANTS.VALUES.INITIAL_MAP_REGION.longitude,
-    longitudeDelta: CONSTANTS.VALUES.LONGITUDE_DELTA,
-    latitudeDelta: CONSTANTS.VALUES.LATITUDE_DELTA,
-  });
-
-  getMapEdgePadding = (): Object => {
-    const bottomEdgePaddingValue = appStyles.metrics.getWidthFromDP('16%')
-      + appStyles.metrics.getHeightFromDP('16%');
-
-    const edgePadding = {
-      top:
-        Platform.OS === 'android'
-          ? PixelRatio.getPixelSizeForLayoutSize(50)
-          : 50,
-      right:
-        Platform.OS === 'android'
-          ? PixelRatio.getPixelSizeForLayoutSize(50)
-          : 50,
-      bottom:
-        Platform.OS === 'android'
-          ? PixelRatio.getPixelSizeForLayoutSize(bottomEdgePaddingValue)
-          : bottomEdgePaddingValue,
-      left:
-        Platform.OS === 'android'
-          ? PixelRatio.getPixelSizeForLayoutSize(50)
-          : 50,
-    };
-
-    return edgePadding;
-  };
-
   onFitMapCoordinates = (): void => {
     const { indexPlaceSelected, userLocation } = this.state;
     const { places } = this.props;
 
-    const edgePadding = this.getMapEdgePadding();
+    const edgePadding = getMapEdgePadding();
 
     if (userLocation && places.length === 0) {
       this._mapRef.fitToCoordinates([userLocation], {
@@ -161,7 +129,7 @@ class PlacesMap extends PureComponent<Props, State> {
         <MapContainer
           onLayout={() => this.setState({ isMapReady: true })}
           isGettingUserLocation={isGettingUserLocation}
-          initialRegion={this.getInitialRegion()}
+          initialRegion={getInitialRegion()}
           showsMyLocationButton={false}
           isMapReady={isMapReady}
           height={mapHeight}
@@ -198,7 +166,7 @@ class PlacesMap extends PureComponent<Props, State> {
           </Fragment>
         )}
         </MapContainer>
-        <PlacesBottomList
+        <MapPlacesBottomList
           onChangePlaceSelected={this.onChangePlaceSelected}
           onPressListItem={onPressListItem}
           places={places}
