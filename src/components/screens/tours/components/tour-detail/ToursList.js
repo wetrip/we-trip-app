@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Fragment } from 'react';
+import React from 'react';
 import { TouchableOpacity, FlatList, View } from 'react-native';
 import styled from 'styled-components';
 

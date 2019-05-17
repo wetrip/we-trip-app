@@ -4,8 +4,9 @@ import React from 'react';
 import { FlatList, View } from 'react-native';
 import styled from 'styled-components';
 
-import DefaultPlaceListItemWithCard from '../../../../common/DefaultPlaceListItemWithCard';
-import appStyles from '../../../../../styles';
+import isEqualsOrLargestThanIphoneX from '../../utils/isEqualsOrLargestThanIphoneX';
+import DefaultPlaceListItemWithCard from './DefaultPlaceListItemWithCard';
+import appStyles from '../../styles';
 
 const ListWrapper = styled(View)`
   flex: 1;
@@ -26,15 +27,33 @@ const onMomentumScrollEnd = (
   onChangePlaceSelected(indexItemSelected);
 };
 
+type LatLng = {
+  latitude: number,
+  longitude: number,
+};
+
+type Place = {
+  distanceToUser: number,
+  location: LatLng,
+  imageURL: string,
+  isOpen: boolean,
+  name: string,
+  id: number,
+};
+
 type Props = {
   onChangePlaceSelected: Function,
   onPressListItem: Function,
-  places: Array<Object>,
+  onSetListRef: ?Function,
+  places: Array<Place>,
 };
+
+const ITEM_LIST_WIDTH = appStyles.metrics.width;
 
 const PlacesBottomList = ({
   onChangePlaceSelected,
   onPressListItem,
+  onSetListRef,
   places,
 }: Props): Object => (
   <ListWrapper>
@@ -50,8 +69,16 @@ const PlacesBottomList = ({
           name={item.name}
         />
       )}
+      getItemLayout={(data, index) => ({
+        length: ITEM_LIST_WIDTH,
+        offset: ITEM_LIST_WIDTH * index,
+        index,
+      })}
       showsHorizontalScrollIndicator={false}
-      keyExtractor={item => item.id}
+      keyExtractor={item => `${item.id}`}
+      ref={(ref: any): void => {
+        onSetListRef && onSetListRef(ref);
+      }}
       data={places}
       pagingEnabled
       horizontal

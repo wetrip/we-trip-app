@@ -33,8 +33,8 @@ type Props = {
 
 const Header = ({ subTitle, title }: Props): Object => (
   <Wrapper>
-    <TourTitle>Knowing the coast</TourTitle>
-    <SubTitle>5 Destinations</SubTitle>
+    <TourTitle>{title}</TourTitle>
+    <SubTitle>{subTitle}</SubTitle>
   </Wrapper>
 );
 

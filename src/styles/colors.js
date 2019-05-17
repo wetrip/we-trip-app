@@ -15,6 +15,7 @@ export default {
   textInputTextColor: 'rgba(0, 0, 0, 0.3)',
   green: '#1DB954',
   blue: '#4688F1',
+  inactiveMarker: '#ff8a8a',
   red: '#FB1A1A',
   yellow: '#F8C330',
 };

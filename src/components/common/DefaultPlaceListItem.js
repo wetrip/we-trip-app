@@ -46,7 +46,7 @@ const PlaceName = styled(Text).attrs({
 const PlaceStatus = styled(Text).attrs({
   numberOfLines: 1,
 })`
-  margin-top: ${({ theme }) => theme.metrics.extraSmallSize}px;
+  margin-top: ${({ theme }) => 0.5 * theme.metrics.extraSmallSize}px;
   font-size: ${({ theme }) => theme.metrics.largeSize}px;
   font-weight: 600;
   color: ${({ theme, isOpen }) => (isOpen ? theme.colors.green : theme.colors.red)};
@@ -64,7 +64,7 @@ const DistanceText = styled(Text).attrs({
 const DistanceWrapper = styled(View)`
   flex-direction: row;
   align-items: center;
-  margin-top: ${({ theme }) => theme.metrics.mediumSize}px;
+  margin-top: ${({ theme }) => theme.metrics.smallSize}px;
 `;
 
 type Props = {
