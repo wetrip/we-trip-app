@@ -12,7 +12,7 @@ const RootStack = createStackNavigator(
     [ROUTE_NAMES.SETTINGS]: {
       screen: Settings,
       navigationOptions: ({ navigation }) => ({
-        title: 'SETTINGS',
+        title: 'Settings',
       }),
     },
   },
