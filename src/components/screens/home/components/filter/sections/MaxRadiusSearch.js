@@ -60,7 +60,7 @@ Maximum radius of search
       </SectionTitle>
       <TextWrapper>
         <RadiusBoundsText>1 km</RadiusBoundsText>
-        <RadiusSelected>{`${maxRadiusSelected} km`}</RadiusSelected>
+        <RadiusSelected>{`${maxRadiusSelected || 1} km`}</RadiusSelected>
         <RadiusBoundsText>15 km</RadiusBoundsText>
       </TextWrapper>
       <Slider

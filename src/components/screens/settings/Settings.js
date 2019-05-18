@@ -1,9 +1,16 @@
 // @flow
 
 import React from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, View } from 'react-native';
+import styled from 'styled-components';
 
 import SettingItemList from './components/SettingItemList';
+
+const Wrapper = styled(View)`
+  width: 100%;
+  height: 100%;
+  background-color: ${({ theme }) => theme.colors.secondaryColor};
+`;
 
 const ITEMS = [
   {
@@ -55,19 +62,21 @@ type Props = {
 };
 
 const Settings = ({ navigation }: Props): Object => (
-  <ScrollView
-    showsVerticalScrollIndicator={false}
-    alwaysBounceVertical={false}
-  >
-    {ITEMS.map(item => (
-      <SettingItemList
-        onPress={() => onSelectSettingOption(navigation, item.nextScreen)}
-        description={item.description}
-        title={item.title}
-        key={item.title}
-      />
-    ))}
-  </ScrollView>
+  <Wrapper>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      alwaysBounceVertical={false}
+    >
+      {ITEMS.map(item => (
+        <SettingItemList
+          onPress={() => onSelectSettingOption(navigation, item.nextScreen)}
+          description={item.description}
+          title={item.title}
+          key={item.title}
+        />
+      ))}
+    </ScrollView>
+  </Wrapper>
 );
 
 export default Settings;
