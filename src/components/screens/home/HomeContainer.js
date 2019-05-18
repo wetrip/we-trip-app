@@ -3,97 +3,69 @@
 import React, { Fragment, Component } from 'react';
 import { View } from 'react-native';
 
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { Creators as PlaceCreators } from '../../../store/ducks/places';
+
+import getUserLocation from '../../../services/location/getUserLocation';
 import HomeComponent from './components/HomeComponent';
 import CONSTANTS from '../../../utils/CONSTANTS';
 import appStyles from '../../../styles';
 
-const PLACES = [
-  {
-    location: {
-      latitude: -3.8406333,
-      longitude: -38.5606571,
-    },
-    isOpen: true,
-    imageURL:
-      'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/coco-bambu-sul.jpeg',
-    name: 'Stenio Wagner Pereira de Freitas Stenio Wagner Pereira de Freitas',
-    distanceToUser: 4,
-    id: '1',
-  },
-  {
-    location: {
-      latitude: -3.7273013,
-      longitude: -38.5897033,
-    },
-    isOpen: false,
-    imageURL:
-      'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/misaki.jpeg',
-    distanceToUser: 1.1,
-    name: 'Place 02',
-    id: '2',
-  },
-  {
-    location: {
-      latitude: -3.7451878,
-      longitude: -38.5736122,
-    },
-    isOpen: true,
-    imageURL:
-      'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/cabana-riomar.jpeg',
-    distanceToUser: 3.7,
-    name: 'Place 03',
-    id: '3',
-  },
-  {
-    location: {
-      latitude: -3.8406333,
-      longitude: -38.5606571,
-    },
-    isOpen: true,
-    imageURL:
-      'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/coco-bambu-sul.jpeg',
-    name: 'Place 01',
-    distanceToUser: 4,
-    id: '12',
-  },
-  {
-    location: {
-      latitude: -3.7273013,
-      longitude: -38.5897033,
-    },
-    isOpen: false,
-    imageURL:
-      'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/misaki.jpeg',
-    distanceToUser: 1.1,
-    name: 'Place 02',
-    id: '22',
-  },
-  {
-    location: {
-      latitude: -3.7451878,
-      longitude: -38.5736122,
-    },
-    isOpen: true,
-    imageURL:
-      'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/cabana-riomar.jpeg',
-    distanceToUser: 3.7,
-    name: 'Place 03',
-    id: '23',
-  },
-];
+type Place = {
+  distanceToUser: number,
+  location: LatLng,
+  imageURL: string,
+  isOpen: boolean,
+  name: string,
+  id: number,
+};
 
-class HomeContainer extends Component {
+type PlaceProp = {
+  loadingAllPlaces: boolean,
+  allPlaces: Array<Place>,
+  error: boolean,
+};
+
+type Props = {
+  getAllPlaces: Function,
+  places: PlaceProp,
+};
+
+type LatLng = {
+  longitude: number,
+  latitude: number,
+};
+
+type State = {
+  shouldShowDarkLayer: boolean,
+  indexScreenSelected: number,
+  isFilterOpen: boolean,
+  userLocation: LatLng,
+  mapHeight: number,
+};
+
+const DEFAULT_FILTER = {
+  type: 'top_rated',
+  categories: [],
+  price: 'all',
+};
+
+class HomeContainer extends Component<Props, State> {
   _outterListRef: Object = {};
 
   state = {
     shouldShowDarkLayer: false,
+    filter: DEFAULT_FILTER,
     indexScreenSelected: 0,
     isFilterOpen: false,
+    userLocation: null,
     mapHeight: 0,
   };
 
-  componentDidMount() {
-    const { navigation } = this.props;
+  async componentDidMount() {
+    const { getAllPlaces, navigation } = this.props;
+    let userLocation;
 
     navigation.setParams({
       [CONSTANTS.PARAMS.CHANGE_HOME_SCREEN_TYPE]: this.onChooseScreenIndex,
@@ -101,6 +73,18 @@ class HomeContainer extends Component {
       [CONSTANTS.PARAMS.ON_SEARCH_PLACE]: place => console.tron.log(place),
       [CONSTANTS.PARAMS.TOGGLE_FILTER]: this.onToggleFilter,
     });
+
+    try {
+      userLocation = await getUserLocation(navigator);
+    } catch {
+      userLocation = null;
+    }
+
+    this.setState({
+      userLocation,
+    });
+
+    getAllPlaces(userLocation, {});
   }
 
   onPressListItem = (id: string): void => {
@@ -109,6 +93,23 @@ class HomeContainer extends Component {
     navigation.navigate(CONSTANTS.ROUTES.PLACE_DETAIL, {
       [CONSTANTS.PARAMS.PLACE_ID]: id,
     });
+  };
+
+  onSearchWithFilter = (filter: Object): void => {
+    const { getAllPlaces } = this.props;
+    const { userLocation } = this.state;
+
+    const filterParams = {
+      userLocation,
+      ...filter,
+    };
+
+    this.setState(
+      {
+        isFilterOpen: false,
+      },
+      () => getAllPlaces(userLocation, filterParams),
+    );
   };
 
   onToggleDarkLayer = (shouldShowDarkLayer: boolean): void => {
@@ -153,19 +154,34 @@ class HomeContainer extends Component {
   render() {
     const { shouldShowDarkLayer, isFilterOpen, mapHeight } = this.state;
 
+    const { places } = this.props;
+    const { loadingAllPlaces, allPlaces, error } = places;
+
     return (
       <HomeComponent
+        onSearchWithFilter={this.onSearchWithFilter}
         shouldShowDarkLayer={shouldShowDarkLayer}
         onSetFlatListRef={this.onSetFlatListRef}
         onPressListItem={this.onPressListItem}
         onSetMapHeight={this.onSetMapHeight}
         onToggleFilter={this.onToggleFilter}
         isFilterOpen={isFilterOpen}
+        loading={loadingAllPlaces}
         mapHeight={mapHeight}
-        places={PLACES}
+        places={allPlaces}
+        error={error}
       />
     );
   }
 }
 
-export default HomeContainer;
+const mapDispatchToProps = dispatch => bindActionCreators(PlaceCreators, dispatch);
+
+const mapStateToProps = state => ({
+  places: state.places,
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(HomeContainer);

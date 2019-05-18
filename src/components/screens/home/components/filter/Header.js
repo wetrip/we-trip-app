@@ -38,7 +38,7 @@ const ContentWrapper = styled(View)`
 `;
 
 const Title = styled(Text)`
-  font-weight: 900;
+  font-weight: 700;
   font-size: ${({ theme }) => 1.1 * theme.metrics.extraLargeSize}px;
   color: ${({ theme }) => theme.colors.textColor};
 `;
@@ -95,7 +95,7 @@ const Header = ({ onCloseFilter, onResetFilter }: Props): Object => (
           />,
           onCloseFilter,
         )}
-        <Title>FILTER</Title>
+        <Title>Filter</Title>
         {renderButton(<ResetText>RESET</ResetText>, onResetFilter)}
       </ContentWrapper>
     </Wrapper>

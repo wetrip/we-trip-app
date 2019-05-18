@@ -8,7 +8,7 @@ import styled from 'styled-components';
 const Wrapper = styled(TouchableOpacity)`
   height: ${({ theme }) => theme.metrics.getHeightFromDP('25%')}px;
   margin-horizontal: ${({ theme }) => theme.metrics.mediumSize}px;
-  margin-bottom: ${({ theme }) => theme.metrics.mediumSize}px;
+  margin-vertical: ${({ theme }) => theme.metrics.smallSize}px;
 `;
 
 const DarkLayer = styled(View)`

@@ -26,6 +26,7 @@ type State = {
 };
 
 type Props = {
+  onSearchWithFilter: Function,
   onToggleFilter: Function,
   isVisible: boolean,
 };
@@ -72,7 +73,10 @@ class Filter extends Component<Props, State> {
   };
 
   onSetType = (type: string): void => {
+    const { maxRadiusSelected } = this.state;
+
     this.setState({
+      maxRadiusSelected: type === 'nearby' ? null : maxRadiusSelected || 1,
       type,
     });
   };
@@ -82,6 +86,12 @@ class Filter extends Component<Props, State> {
   };
 
   onResetFilter = (): void => {
+    const shouldAllowResetFilter = this.checkStateChanged();
+
+    if (!shouldAllowResetFilter) {
+      return;
+    }
+
     this._sliderRef.setNativeProps({ value: 1 });
 
     this.setState({
@@ -90,17 +100,32 @@ class Filter extends Component<Props, State> {
   };
 
   onPressSearch = (): void => {
-    console.tron.log(this.state);
+    const { onSearchWithFilter } = this.props;
+
+    onSearchWithFilter(this.state);
   };
 
   onCloseFilter = (): void => {
     const { onToggleFilter } = this.props;
 
-    this.setState(
-      {
-        ...INITIAL_STATE,
-      },
-      () => onToggleFilter(),
+    onToggleFilter();
+  };
+
+  checkStateChanged = (): boolean => {
+    const {
+      maxRadiusSelected, categories, price, type,
+    } = this.state;
+
+    const isMaxRadiusChanged = maxRadiusSelected !== INITIAL_STATE.maxRadiusSelected;
+    const isPriceChanged = price !== INITIAL_STATE.price;
+    const isTypeChanged = type !== INITIAL_STATE.type;
+    const isCategoriesChanged = categories.length > 0;
+
+    return (
+      isMaxRadiusChanged
+      || isPriceChanged
+      || isTypeChanged
+      || isCategoriesChanged
     );
   };
 
