@@ -35,68 +35,37 @@ const MapContainer = styled(MapView)`
   }}px;
 `;
 
+type LatLng = {
+  longitude: number,
+  latitude: number,
+};
+
 type Props = {
   onPressListItem: Function,
   placeLocation: Object,
   places: Array<Object>,
+  userLocation: LatLng,
   mapHeight: number,
 };
 
 type State = {
-  isGettingUserLocation: boolean,
-  userLocation: Object,
+  indexPlaceSelected: number,
+  isMapReady: boolean,
 };
 
 class PlacesMap extends PureComponent<Props, State> {
   _mapRef: Object = null;
 
   state = {
-    isGettingUserLocation: true,
     indexPlaceSelected: 0,
-    userLocation: null,
     isMapReady: false,
   };
 
-  async componentDidMount() {
-    try {
-      const location = await getUserLocation(navigator);
-
-      if (!location) {
-        return;
-      }
-
-      const { latitude, longitude } = location;
-
-      this.setState({
-        isGettingUserLocation: false,
-        userLocation: {
-          longitude,
-          latitude,
-        },
-      });
-    } catch (err) {
-      alert('There was an error while trying to get your position.');
-
-      this.setState({
-        isGettingUserLocation: false,
-      });
-    }
-  }
-
   onFitMapCoordinates = (): void => {
-    const { indexPlaceSelected, userLocation } = this.state;
-    const { places } = this.props;
+    const { indexPlaceSelected } = this.state;
+    const { userLocation, places } = this.props;
 
     const edgePadding = getMapEdgePadding();
-
-    if (userLocation && places.length === 0) {
-      this._mapRef.fitToCoordinates([userLocation], {
-        animated: true,
-        edgePadding,
-      });
-
-      return;
-    }
 
     const markers = userLocation
       ? [userLocation, places[indexPlaceSelected].location]
@@ -108,70 +77,93 @@ class PlacesMap extends PureComponent<Props, State> {
     });
   };
 
-  onChangePlaceSelected = (indexPlaceSelected: number): void => {
+  onChangePlaceSelected = (indexSelected: number): void => {
+    const { indexPlaceSelected } = this.state;
+    const { places } = this.props;
+
+    const isSameIndex = indexPlaceSelected === indexSelected;
+    const isIndexOutOfBounds = indexSelected >= places.length || indexSelected < 0;
+
+    if (isIndexOutOfBounds || isSameIndex) {
+      return;
+    }
+
     this.setState({
-      indexPlaceSelected,
+      indexPlaceSelected: indexSelected,
     });
   };
 
-  render() {
-    const {
-      isGettingUserLocation,
-      indexPlaceSelected,
-      userLocation,
-      isMapReady,
-    } = this.state;
+  onMapReady = (): void => {
+    const { userLocation, places } = this.props;
 
-    const { onPressListItem, mapHeight, places } = this.props;
+    if (!userLocation) {
+      this.onFitMapCoordinates();
+    }
+  };
+
+  render() {
+    const { indexPlaceSelected, isMapReady } = this.state;
+
+    const {
+      onPressListItem, userLocation, mapHeight, places,
+    } = this.props;
+
+    const shouldShowContent = isMapReady && this._mapRef;
 
     return (
       <Container>
         <MapContainer
+          loadingBackgroundColor={appStyles.colors.secondaryColor}
           onLayout={() => this.setState({ isMapReady: true })}
-          isGettingUserLocation={isGettingUserLocation}
+          loadingIndicatorColor={appStyles.colors.textColor}
           initialRegion={getInitialRegion()}
           showsMyLocationButton={false}
+          onMapReady={this.onMapReady}
           isMapReady={isMapReady}
           height={mapHeight}
           showsUserLocation
+          loadingEnabled
           showsBuildings
           ref={(ref) => {
             this._mapRef = ref;
           }}
         >
-        {(isMapReady && this._mapRef) && (
-          <Fragment>
-            {userLocation && (
-              <Directions
-                onReady={this.onFitMapCoordinates}
-                origin={userLocation}
-                destination={
-                  places[indexPlaceSelected]
-                  && places[indexPlaceSelected].location
-                }
-              />
-            )}
-            <Marker
-              coordinate={
-                places[indexPlaceSelected]
-                && places[indexPlaceSelected].location
-              }
-            >
-            <Icon
-              color={appStyles.colors.red}
-              name="map-marker"
-              size={36}
-            />
-          </Marker>
-          </Fragment>
-        )}
+          {shouldShowContent && (
+            <Fragment>
+              {userLocation && (
+                <Directions
+                  onReady={this.onFitMapCoordinates}
+                  origin={userLocation}
+                  destination={
+                    places[indexPlaceSelected]
+                    && places[indexPlaceSelected].location
+                  }
+                />
+              )}
+              {places[indexPlaceSelected] && (
+                <Marker
+                  coordinate={
+                    places[indexPlaceSelected]
+                    && places[indexPlaceSelected].location
+                  }
+                >
+                  <Icon
+                    color={appStyles.colors.red}
+                    name="map-marker"
+                    size={36}
+                  />
+                </Marker>
+              )}
+            </Fragment>
+          )}
         </MapContainer>
-        <MapPlacesBottomList
-          onChangePlaceSelected={this.onChangePlaceSelected}
-          onPressListItem={onPressListItem}
-          places={places}
-        />
-        {isGettingUserLocation && <LoadingUserLocation />}
+        {shouldShowContent && (
+          <MapPlacesBottomList
+            onChangePlaceSelected={this.onChangePlaceSelected}
+            onPressListItem={onPressListItem}
+            places={places}
+          />
+        )}
       </Container>
     );
   }
