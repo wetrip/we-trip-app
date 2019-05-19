@@ -27,11 +27,6 @@ const DarkLayer = styled(View)`
   background-color: ${({ theme }) => theme.colors.darkLayer};
 `;
 
-const LAYOUTS = [
-  { Layout: MapScreen, id: 'map' },
-  { Layout: ListScreen, id: 'list' },
-];
-
 type LatLng = {
   longitude: number,
   latitude: number,
@@ -54,6 +49,7 @@ type Props = {
   onToggleFilter: Function,
   onSetMapHeight: Function,
   isFilterOpen: boolean,
+  userLocation: ?LatLng,
   places: Array<Place>,
   mapHeight: number,
   loading: boolean,
@@ -68,6 +64,7 @@ const HomeComponent = ({
   onToggleFilter,
   onSetMapHeight,
   isFilterOpen,
+  userLocation,
   mapHeight,
   loading,
   places,
@@ -79,7 +76,7 @@ const HomeComponent = ({
   return (
     <Wrapper>
       {shouldShowLoading && <Loading />}
-      {true && (
+      {shouldShowContent && (
         <Fragment>
           <ContentWrapper
             ref={(ref: any): void => onSetFlatListRef(ref)}
@@ -106,6 +103,7 @@ const HomeComponent = ({
                 <MapScreen
                   onNavigateToMainStack={this.onNavigateToMainStack}
                   onPressListItem={onPressListItem}
+                  userLocation={userLocation}
                   mapHeight={mapHeight}
                   places={places}
                 />

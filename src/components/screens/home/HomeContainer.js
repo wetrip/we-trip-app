@@ -38,6 +38,7 @@ type LatLng = {
 };
 
 type State = {
+  isGettingUserLocation: boolean,
   shouldShowDarkLayer: boolean,
   indexScreenSelected: number,
   isFilterOpen: boolean,
@@ -45,18 +46,12 @@ type State = {
   mapHeight: number,
 };
 
-const DEFAULT_FILTER = {
-  type: 'top_rated',
-  categories: [],
-  price: 'all',
-};
-
 class HomeContainer extends Component<Props, State> {
   _outterListRef: Object = {};
 
   state = {
+    isGettingUserLocation: true,
     shouldShowDarkLayer: false,
-    filter: DEFAULT_FILTER,
     indexScreenSelected: 0,
     isFilterOpen: false,
     userLocation: null,
@@ -81,6 +76,7 @@ class HomeContainer extends Component<Props, State> {
     }
 
     this.setState({
+      isGettingUserLocation: false,
       userLocation,
     });
 
@@ -152,13 +148,20 @@ class HomeContainer extends Component<Props, State> {
   };
 
   render() {
-    const { shouldShowDarkLayer, isFilterOpen, mapHeight } = this.state;
+    const {
+      isGettingUserLocation,
+      shouldShowDarkLayer,
+      isFilterOpen,
+      userLocation,
+      mapHeight,
+    } = this.state;
 
     const { places } = this.props;
     const { loadingAllPlaces, allPlaces, error } = places;
 
     return (
       <HomeComponent
+        loading={isGettingUserLocation || loadingAllPlaces}
         onSearchWithFilter={this.onSearchWithFilter}
         shouldShowDarkLayer={shouldShowDarkLayer}
         onSetFlatListRef={this.onSetFlatListRef}
@@ -166,7 +169,7 @@ class HomeContainer extends Component<Props, State> {
         onSetMapHeight={this.onSetMapHeight}
         onToggleFilter={this.onToggleFilter}
         isFilterOpen={isFilterOpen}
-        loading={loadingAllPlaces}
+        userLocation={userLocation}
         mapHeight={mapHeight}
         places={allPlaces}
         error={error}

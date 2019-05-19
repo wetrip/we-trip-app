@@ -40,7 +40,7 @@ const getUserLocation = async (navigator) => {
       error => reject(error),
       {
         enableHighAccuracy: true,
-        timeout: 60000,
+        timeout: 40000,
       },
     );
   });

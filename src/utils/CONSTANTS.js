@@ -22,8 +22,8 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const VALUES = {
   INITIAL_MAP_REGION: {
-    latitude: -3.7900894,
-    longitude: -38.6590335,
+    latitude: -3.71839,
+    longitude: -38.5434,
   },
   LONGITUDE_DELTA,
   LATITUDE_DELTA,
