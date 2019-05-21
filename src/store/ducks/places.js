@@ -49,6 +49,7 @@ const places = (state = INITIAL_STATE, { type, payload }) => {
       return {
         ...state,
         loadingAllPlaces: false,
+        allPlaces: [],
         error: true,
       };
 

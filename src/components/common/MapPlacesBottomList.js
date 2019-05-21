@@ -6,6 +6,7 @@ import styled from 'styled-components';
 
 import isEqualsOrLargestThanIphoneX from '../../utils/isEqualsOrLargestThanIphoneX';
 import DefaultPlaceListItemWithCard from './DefaultPlaceListItemWithCard';
+import FooterListLoading from './FooterListLoading';
 import appStyles from '../../styles';
 
 const ListWrapper = styled(View)`
@@ -43,23 +44,45 @@ type Place = {
 
 type Props = {
   onChangePlaceSelected: Function,
+  onEndListReached: ?Function,
+  isAllDataFetched: ?boolean,
   onPressListItem: Function,
   onSetListRef: ?Function,
   places: Array<Place>,
+  withRefetch: boolean,
+  loading: ?boolean,
 };
 
 const ITEM_LIST_WIDTH = appStyles.metrics.width;
 
 const PlacesBottomList = ({
   onChangePlaceSelected,
+  isAllDataFetched,
+  onEndListReached,
   onPressListItem,
   onSetListRef,
+  withRefetch,
+  loading,
   places,
 }: Props): Object => (
   <ListWrapper>
     <FlatList
       onMomentumScrollEnd={event => onMomentumScrollEnd(onChangePlaceSelected, event)
       }
+      ListFooterComponent={() => {
+        if (withRefetch && (!isAllDataFetched || loading)) {
+          return (
+            <FooterListLoading
+              withHorizontalList
+              styleProps={{
+                height: '100%',
+              }}
+            />
+          );
+        }
+
+        return null;
+      }}
       renderItem={({ item }) => (
         <DefaultPlaceListItemWithCard
           onPressListItem={() => onPressListItem(item.id)}
@@ -74,13 +97,20 @@ const PlacesBottomList = ({
         offset: ITEM_LIST_WIDTH * index,
         index,
       })}
-      showsHorizontalScrollIndicator={false}
-      keyExtractor={item => `${item.id}`}
+      onEndReached={() => {
+        if (withRefetch) {
+          onEndListReached();
+        }
+      }}
       ref={(ref: any): void => {
         onSetListRef && onSetListRef(ref);
       }}
-      data={places}
+      showsHorizontalScrollIndicator={false}
+      keyExtractor={item => `${item.id}`}
+      onEndReachedThreshold={0.9}
+      initialNumToRender={5}
       pagingEnabled
+      data={places}
       horizontal
     />
   </ListWrapper>

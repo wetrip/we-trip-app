@@ -20,7 +20,7 @@ const Container = styled(ScrollView)`
 
 type State = {
   categories: Array<string>,
-  maxRadiusSelected: number,
+  maxRadius: number,
   price: string,
   type: string,
 };
@@ -32,9 +32,9 @@ type Props = {
 };
 
 const INITIAL_STATE = {
-  maxRadiusSelected: 1,
   type: 'top_rated',
   categories: [],
+  maxRadius: 1,
   price: 'all',
 };
 
@@ -43,11 +43,11 @@ class Filter extends Component<Props, State> {
 
   state = INITIAL_STATE;
 
-  onSetMaxRadius = (maxRadiusSelected: number): void => {
-    this._sliderRef.setNativeProps({ value: maxRadiusSelected });
+  onSetMaxRadius = (maxRadius: number): void => {
+    this._sliderRef.setNativeProps({ value: maxRadius });
 
     this.setState({
-      maxRadiusSelected,
+      maxRadius,
     });
   };
 
@@ -73,10 +73,10 @@ class Filter extends Component<Props, State> {
   };
 
   onSetType = (type: string): void => {
-    const { maxRadiusSelected } = this.state;
+    const { maxRadius } = this.state;
 
     this.setState({
-      maxRadiusSelected: type === 'nearby' ? null : maxRadiusSelected || 1,
+      maxRadius: type === 'nearby' ? null : maxRadius || 1,
       type,
     });
   };
@@ -113,10 +113,10 @@ class Filter extends Component<Props, State> {
 
   checkStateChanged = (): boolean => {
     const {
-      maxRadiusSelected, categories, price, type,
+      maxRadius, categories, price, type,
     } = this.state;
 
-    const isMaxRadiusChanged = maxRadiusSelected !== INITIAL_STATE.maxRadiusSelected;
+    const isMaxRadiusChanged = maxRadius !== INITIAL_STATE.maxRadius;
     const isPriceChanged = price !== INITIAL_STATE.price;
     const isTypeChanged = type !== INITIAL_STATE.type;
     const isCategoriesChanged = categories.length > 0;
@@ -131,7 +131,7 @@ class Filter extends Component<Props, State> {
 
   render() {
     const {
-      maxRadiusSelected, categories, price, type,
+      maxRadius, categories, price, type,
     } = this.state;
 
     const shouldDisableMaximumRadiusSearch = type === 'nearby';
@@ -162,9 +162,9 @@ class Filter extends Component<Props, State> {
           />
           <MaxRadiusSearchSection
             shouldDisableMaximumRadiusSearch={shouldDisableMaximumRadiusSearch}
-            maxRadiusSelected={maxRadiusSelected}
             onSetSliderRef={this.onSetSliderRef}
             onSetMaxRadius={this.onSetMaxRadius}
+            maxRadius={maxRadius}
           />
           <CategoriesSection
             onSetCategory={this.onSetCategory}
