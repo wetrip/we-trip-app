@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Fragment, Component } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import { View } from 'react-native';
 
 import { bindActionCreators } from 'redux';
@@ -28,8 +28,9 @@ type PlaceProp = {
 };
 
 type Props = {
+  places: Array<PlaceProp>,
   getAllPlaces: Function,
-  places: PlaceProp,
+  loading: boolean,
 };
 
 type LatLng = {
@@ -41,20 +42,27 @@ type State = {
   isGettingUserLocation: boolean,
   shouldShowDarkLayer: boolean,
   indexScreenSelected: number,
+  placesDataset: Array<Place>,
   isFilterOpen: boolean,
+  currentFetchPage: 0,
   userLocation: LatLng,
   mapHeight: number,
 };
 
-class HomeContainer extends Component<Props, State> {
+class HomeContainer extends PureComponent<Props, State> {
+  _lastFetchTimestamp: number = 0;
   _outterListRef: Object = {};
 
   state = {
     isGettingUserLocation: true,
     shouldShowDarkLayer: false,
+    isAllDataFetched: false,
     indexScreenSelected: 0,
     isFilterOpen: false,
+    currentFetchPage: 0,
     userLocation: null,
+    placesDataset: [],
+    currentFilter: {},
     mapHeight: 0,
   };
 
@@ -65,23 +73,117 @@ class HomeContainer extends Component<Props, State> {
     navigation.setParams({
       [CONSTANTS.PARAMS.CHANGE_HOME_SCREEN_TYPE]: this.onChooseScreenIndex,
       [CONSTANTS.PARAMS.ON_TOGGLE_DARK_LAYER]: this.onToggleDarkLayer,
-      [CONSTANTS.PARAMS.ON_SEARCH_PLACE]: place => console.tron.log(place),
+      [CONSTANTS.PARAMS.ON_SEARCH_PLACE]: placeName => this.onSearchByName(placeName),
       [CONSTANTS.PARAMS.TOGGLE_FILTER]: this.onToggleFilter,
     });
 
-    try {
+    /* try {
       userLocation = await getUserLocation(navigator);
     } catch {
       userLocation = null;
+    } */
+
+    this.setState(
+      {
+        isGettingUserLocation: false,
+        userLocation: null,
+      },
+      () => this.onFetchData(),
+    );
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    const { places } = nextProps;
+    const { loading, allPlaces } = places;
+    const { placesDataset } = this.state;
+
+    if (allPlaces.length === 0) {
+      this.setState({
+        isAllDataFetched: true,
+      });
+
+      return;
+    }
+
+    const checkIsSameData = (): boolean => {
+      let isDataRepeated;
+
+      for (let i = 0; i < places.length; i++) {
+        isDataRepeated = placesDataset.includes(places[i]);
+
+        if (isDataRepeated) {
+          return true;
+        }
+      }
+
+      return false;
+    };
+
+    const hasRepeatedData = checkIsSameData();
+
+    if (loading || hasRepeatedData) {
+      return;
     }
 
     this.setState({
-      isGettingUserLocation: false,
-      userLocation,
+      placesDataset: [...placesDataset, ...allPlaces],
+      isAllDataFetched: false,
+    });
+  }
+
+  onFetchData = (): void => {
+    const { currentFetchPage, userLocation, currentFilter } = this.state;
+
+    const { getAllPlaces, places } = this.props;
+    const { loading } = places;
+
+    const isEnabledToRefetchData = this.checkIsEnableToRefetchData();
+
+    if (loading || !isEnabledToRefetchData) {
+      return;
+    }
+
+    this.setState({
+      currentFetchPage: currentFetchPage + 1,
     });
 
-    getAllPlaces(userLocation, {});
-  }
+    getAllPlaces(userLocation, {
+      ...currentFilter,
+      _page: currentFetchPage + 1,
+      _limit: 5,
+    });
+  };
+
+  onSearchWithFilter = (filter: Object): void => {
+    this.setState(
+      {
+        currentFilter: filter,
+        currentFetchPage: 0,
+        isFilterOpen: false,
+      },
+      () => this.onFetchData(),
+    );
+  };
+
+  onSearchByName = (placeName: string): void => {
+    this.setState(
+      {
+        currentFilter: { name: placeName },
+        currentFetchPage: 0,
+      },
+      () => this.onFetchData(),
+    );
+  };
+
+  onRefreshData = (): void => {
+    this.setState(
+      {
+        currentFetchPage: 0,
+        placesDataset: [],
+      },
+      () => this.onFetchData(),
+    );
+  };
 
   onPressListItem = (id: string): void => {
     const { navigation } = this.props;
@@ -89,23 +191,6 @@ class HomeContainer extends Component<Props, State> {
     navigation.navigate(CONSTANTS.ROUTES.PLACE_DETAIL, {
       [CONSTANTS.PARAMS.PLACE_ID]: id,
     });
-  };
-
-  onSearchWithFilter = (filter: Object): void => {
-    const { getAllPlaces } = this.props;
-    const { userLocation } = this.state;
-
-    const filterParams = {
-      userLocation,
-      ...filter,
-    };
-
-    this.setState(
-      {
-        isFilterOpen: false,
-      },
-      () => getAllPlaces(userLocation, filterParams),
-    );
   };
 
   onToggleDarkLayer = (shouldShowDarkLayer: boolean): void => {
@@ -123,6 +208,12 @@ class HomeContainer extends Component<Props, State> {
   };
 
   onChooseScreenIndex = (index: number): void => {
+    const { placesDataset } = this.state;
+
+    if (placesDataset === 0) {
+      return;
+    }
+
     this.setState(
       {
         indexScreenSelected: index,
@@ -147,17 +238,32 @@ class HomeContainer extends Component<Props, State> {
     });
   };
 
+  checkIsEnableToRefetchData = (): boolean => {
+    const currentTimeStamp = new Date().getTime();
+    const timestampDifference = currentTimeStamp - this._lastFetchTimestamp;
+
+    this._lastFetchTimestamp = currentTimeStamp;
+
+    if (timestampDifference < 750) {
+      return false;
+    }
+
+    return true;
+  };
+
   render() {
     const {
       isGettingUserLocation,
       shouldShowDarkLayer,
+      isAllDataFetched,
+      placesDataset,
       isFilterOpen,
       userLocation,
       mapHeight,
     } = this.state;
 
     const { places } = this.props;
-    const { loadingAllPlaces, allPlaces, error } = places;
+    const { loadingAllPlaces, error } = places;
 
     return (
       <HomeComponent
@@ -168,10 +274,13 @@ class HomeContainer extends Component<Props, State> {
         onPressListItem={this.onPressListItem}
         onSetMapHeight={this.onSetMapHeight}
         onToggleFilter={this.onToggleFilter}
+        isAllDataFetched={isAllDataFetched}
+        onRefreshData={this.onRefreshData}
+        onFetchData={this.onFetchData}
         isFilterOpen={isFilterOpen}
         userLocation={userLocation}
+        places={placesDataset}
         mapHeight={mapHeight}
-        places={allPlaces}
         error={error}
       />
     );

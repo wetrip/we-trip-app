@@ -1,6 +1,4 @@
-import {
-  call, select, delay, put,
-} from 'redux-saga/effects';
+import { call, select, put } from 'redux-saga/effects';
 
 import parseParams from './utils/parseParams';
 import api from '../../services/api';

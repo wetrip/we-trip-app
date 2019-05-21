@@ -42,82 +42,94 @@ type Place = {
 };
 
 type Props = {
+  isAllDataFetched: boolean,
   onSearchWithFilter: Function,
   shouldShowDarkLayer: boolean,
   onSetFlatListRef: Function,
   onPressListItem: Function,
   onToggleFilter: Function,
   onSetMapHeight: Function,
+  onRefreshData: Function,
+  onFetchData: Function,
   isFilterOpen: boolean,
   userLocation: ?LatLng,
   places: Array<Place>,
+  parentState: Object,
   mapHeight: number,
   loading: boolean,
   error: boolean,
 };
 
 const HomeComponent = ({
+  isAllDataFetched,
   onSearchWithFilter,
   shouldShowDarkLayer,
   onSetFlatListRef,
   onPressListItem,
   onToggleFilter,
   onSetMapHeight,
+  onRefreshData,
   isFilterOpen,
   userLocation,
+  parentState,
+  onFetchData,
   mapHeight,
   loading,
   places,
   error,
 }: Props): Object => {
   const shouldShowLoading = loading && !error && places.length === 0;
-  const shouldShowContent = !loading && !error;
 
   return (
     <Wrapper>
       {shouldShowLoading && <Loading />}
-      {shouldShowContent && (
-        <Fragment>
-          <ContentWrapper
-            ref={(ref: any): void => onSetFlatListRef(ref)}
-            onLayout={({
-              nativeEvent: {
-                layout: { height },
-              },
-            }) => {
-              if (mapHeight === 0) {
-                onSetMapHeight(height);
-              }
-            }}
-            showsHorizontalScrollIndicator={false}
-            scrollEnabled={false}
-            pagingEnabled
-            horizontal
-          >
-            {places.length > 0 && (
-              <Fragment>
-                <ListScreen
-                  onPressListItem={onPressListItem}
-                  places={places}
-                />
-                <MapScreen
-                  onNavigateToMainStack={this.onNavigateToMainStack}
-                  onPressListItem={onPressListItem}
-                  userLocation={userLocation}
-                  mapHeight={mapHeight}
-                  places={places}
-                />
-              </Fragment>
+      <Fragment>
+        <ContentWrapper
+          ref={(ref: any): void => onSetFlatListRef(ref)}
+          onLayout={({
+            nativeEvent: {
+              layout: { height },
+            },
+          }) => {
+            if (mapHeight === 0) {
+              onSetMapHeight(height);
+            }
+          }}
+          showsHorizontalScrollIndicator={false}
+          scrollEnabled={false}
+          pagingEnabled
+          horizontal
+        >
+          <Fragment>
+            <ListScreen
+              isAllDataFetched={isAllDataFetched}
+              onPressListItem={onPressListItem}
+              onEndListReached={onFetchData}
+              onRefreshData={onRefreshData}
+              loading={loading}
+              places={places}
+            />
+            {mapHeight > 0 && (
+              <MapScreen
+                onNavigateToMainStack={this.onNavigateToMainStack}
+                isAllDataFetched={isAllDataFetched}
+                onPressListItem={onPressListItem}
+                onEndListReached={onFetchData}
+                userLocation={userLocation}
+                mapHeight={mapHeight}
+                loading={loading}
+                places={places}
+              />
             )}
-          </ContentWrapper>
-          {shouldShowDarkLayer && <DarkLayer />}
-          <Filter
-            onSearchWithFilter={onSearchWithFilter}
-            onToggleFilter={onToggleFilter}
-            isVisible={isFilterOpen}
-          />
-        </Fragment>
-      )}
+          </Fragment>
+        </ContentWrapper>
+        {shouldShowDarkLayer && <DarkLayer />}
+        <Filter
+          onSearchWithFilter={onSearchWithFilter}
+          onToggleFilter={onToggleFilter}
+          isVisible={isFilterOpen}
+        />
+      </Fragment>
     </Wrapper>
   );
 };

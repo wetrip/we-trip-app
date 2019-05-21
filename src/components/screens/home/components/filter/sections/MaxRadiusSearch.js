@@ -36,16 +36,16 @@ const _sliderRef: Object = null;
 
 type Props = {
   shouldDisableMaximumRadiusSearch: boolean,
-  maxRadiusSelected: number,
   onSetSliderRef: Function,
   onSetMaxRadius: Function,
+  maxRadius: number,
 };
 
 const MaxRadiusSearch = ({
   shouldDisableMaximumRadiusSearch,
-  maxRadiusSelected,
   onSetSliderRef,
   onSetMaxRadius,
+  maxRadius,
 }: Props): Object => {
   const opacity = shouldDisableMaximumRadiusSearch ? 0.3 : 1;
 
@@ -60,7 +60,7 @@ Maximum radius of search
       </SectionTitle>
       <TextWrapper>
         <RadiusBoundsText>1 km</RadiusBoundsText>
-        <RadiusSelected>{`${maxRadiusSelected || 1} km`}</RadiusSelected>
+        <RadiusSelected>{`${maxRadius || 1} km`}</RadiusSelected>
         <RadiusBoundsText>15 km</RadiusBoundsText>
       </TextWrapper>
       <Slider

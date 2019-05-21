@@ -26,13 +26,7 @@ const Container = styled(View)`
 
 const MapContainer = styled(MapView)`
   width: 100%;
-  height: ${({ isMapReady, height, theme }) => {
-    if (!isMapReady || height === 0) {
-      return theme.metrics.height;
-    }
-
-    return height;
-  }}px;
+  height: 100%;
 `;
 
 type LatLng = {
@@ -40,12 +34,24 @@ type LatLng = {
   latitude: number,
 };
 
+type Place = {
+  distanceToUser: number,
+  location: LatLng,
+  imageURL: string,
+  isOpen: boolean,
+  name: string,
+  id: number,
+};
+
 type Props = {
+  onEndListReached: Function,
   onPressListItem: Function,
+  isAllDataFetched: boolean,
   placeLocation: Object,
-  places: Array<Object>,
+  places: Array<Place>,
   userLocation: LatLng,
   mapHeight: number,
+  loading: boolean,
 };
 
 type State = {
@@ -61,9 +67,21 @@ class PlacesMap extends PureComponent<Props, State> {
     isMapReady: false,
   };
 
+  componentWillReceiveProps(nextProps: Props) {
+    const { places } = this.props;
+
+    if (places.length > 0) {
+      this.onFitMapCoordinates();
+    }
+  }
+
   onFitMapCoordinates = (): void => {
     const { indexPlaceSelected } = this.state;
     const { userLocation, places } = this.props;
+
+    if (places.length === 0) {
+      return;
+    }
 
     const edgePadding = getMapEdgePadding();
 
@@ -94,7 +112,7 @@ class PlacesMap extends PureComponent<Props, State> {
   };
 
   onMapReady = (): void => {
-    const { userLocation, places } = this.props;
+    const { userLocation } = this.props;
 
     if (!userLocation) {
       this.onFitMapCoordinates();
@@ -105,10 +123,16 @@ class PlacesMap extends PureComponent<Props, State> {
     const { indexPlaceSelected, isMapReady } = this.state;
 
     const {
-      onPressListItem, userLocation, mapHeight, places,
+      isAllDataFetched,
+      onEndListReached,
+      onPressListItem,
+      userLocation,
+      mapHeight,
+      loading,
+      places,
     } = this.props;
 
-    const shouldShowContent = isMapReady && this._mapRef;
+    const shouldShowContent = isMapReady && this._mapRef && places.length > 0;
 
     return (
       <Container>
@@ -134,10 +158,7 @@ class PlacesMap extends PureComponent<Props, State> {
                 <Directions
                   onReady={this.onFitMapCoordinates}
                   origin={userLocation}
-                  destination={
-                    places[indexPlaceSelected]
-                    && places[indexPlaceSelected].location
-                  }
+                  destination={places[indexPlaceSelected].location}
                 />
               )}
               {places[indexPlaceSelected] && (
@@ -160,8 +181,20 @@ class PlacesMap extends PureComponent<Props, State> {
         {shouldShowContent && (
           <MapPlacesBottomList
             onChangePlaceSelected={this.onChangePlaceSelected}
+            loading={!isAllDataFetched || loading}
+            isAllDataFetched={isAllDataFetched}
+            onEndListReached={() => {
+              if (
+                !isAllDataFetched
+                && indexPlaceSelected + 1 === places.length - 1
+              ) {
+                onEndListReached();
+              }
+            }}
             onPressListItem={onPressListItem}
+            loading={loading}
             places={places}
+            withRefetch
           />
         )}
       </Container>
