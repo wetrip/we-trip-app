@@ -86,12 +86,12 @@ const PlacesList = ({
         onPressListItem={onPressListItem}
       />
     )}
-    keyExtractor={item => `${item.id}`}
     showsVerticalScrollIndicator={false}
+    keyExtractor={item => `${item.id}`}
     refreshControl={
       <RefreshControl
         progressBackgroundColor={appStyles.colors.primaryColor}
-        refreshing={loading && places.length === 0}
+        refreshing={places.length === 0 && loading}
         tintColor={appStyles.colors.primaryColor}
         colors={[appStyles.colors.white]}
         onRefresh={onRefreshData}

@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Fragment } from 'react';
-import { ScrollView, View } from 'react-native';
+import { TouchableWithoutFeedback, ScrollView, View } from 'react-native';
 import styled from 'styled-components';
 
 import Loading from '../../../common/Loading';
@@ -45,6 +45,7 @@ type Props = {
   isAllDataFetched: boolean,
   onSearchWithFilter: Function,
   shouldShowDarkLayer: boolean,
+  onPressDarkLayer: Function,
   onSetFlatListRef: Function,
   onPressListItem: Function,
   onToggleFilter: Function,
@@ -61,9 +62,10 @@ type Props = {
 };
 
 const HomeComponent = ({
-  isAllDataFetched,
-  onSearchWithFilter,
   shouldShowDarkLayer,
+  onSearchWithFilter,
+  isAllDataFetched,
+  onPressDarkLayer,
   onSetFlatListRef,
   onPressListItem,
   onToggleFilter,
@@ -123,7 +125,13 @@ const HomeComponent = ({
             )}
           </Fragment>
         </ContentWrapper>
-        {shouldShowDarkLayer && <DarkLayer />}
+        {shouldShowDarkLayer && (
+          <TouchableWithoutFeedback
+            onPress={onPressDarkLayer}
+          >
+            <DarkLayer />
+          </TouchableWithoutFeedback>
+        )}
         <Filter
           onSearchWithFilter={onSearchWithFilter}
           onToggleFilter={onToggleFilter}

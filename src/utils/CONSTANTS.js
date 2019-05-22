@@ -1,12 +1,11 @@
-import { Dimensions } from 'react-native';
-
-const { width, height } = Dimensions.get('window');
+import appStyles from '../styles';
 
 const ROUTES = {
   PLACE_DETAIL: 'PLACE_DETAIL',
 };
 
 const PARAMS = {
+  SHOULD_RESET_SEARCH_INPUT: 'SHOULD_RESET_SEARCH_INPUT',
   CHANGE_HOME_SCREEN_TYPE: 'CHANGE_HOME_SCREEN_TYPE',
   ON_TOGGLE_DARK_LAYER: 'ON_TOGGLE_DARK_LAYER',
   ON_TYPE_PLACE_NAME: 'ON_TYPE_PLACE_NAME',
@@ -16,11 +15,12 @@ const PARAMS = {
   TOUR_ID: 'TOUR_ID',
 };
 
-const ASPECT_RATIO = width / height;
+const ASPECT_RATIO = appStyles.metrics.width / appStyles.metrics.height;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const VALUES = {
+  LIMIT_ITEMS_RECEIVED_PER_REQUEST: 10,
   INITIAL_MAP_REGION: {
     latitude: -3.71839,
     longitude: -38.5434,
