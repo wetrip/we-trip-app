@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Fragment, PureComponent } from 'react';
-import { View } from 'react-native';
+import { Keyboard } from 'react-native';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -30,6 +30,7 @@ type PlaceProp = {
 type Props = {
   places: Array<PlaceProp>,
   getAllPlaces: Function,
+  navigation: Object,
   loading: boolean,
 };
 
@@ -73,7 +74,7 @@ class HomeContainer extends PureComponent<Props, State> {
     navigation.setParams({
       [CONSTANTS.PARAMS.CHANGE_HOME_SCREEN_TYPE]: this.onChooseScreenIndex,
       [CONSTANTS.PARAMS.ON_TOGGLE_DARK_LAYER]: this.onToggleDarkLayer,
-      [CONSTANTS.PARAMS.ON_SEARCH_PLACE]: placeName => this.onSearchByName(placeName),
+      [CONSTANTS.PARAMS.ON_SEARCH_PLACE]: this.onSearchByName,
       [CONSTANTS.PARAMS.TOGGLE_FILTER]: this.onToggleFilter,
     });
 
@@ -93,9 +94,18 @@ class HomeContainer extends PureComponent<Props, State> {
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    const { places } = nextProps;
+    const { navigation, places } = nextProps;
     const { loading, allPlaces } = places;
     const { placesDataset } = this.state;
+    const { params } = navigation.state;
+
+    if (params[CONSTANTS.PARAMS.SHOULD_RESET_SEARCH_INPUT]) {
+      navigation.setParams({
+        [CONSTANTS.PARAMS.SHOULD_RESET_SEARCH_INPUT]: false,
+      });
+
+      return;
+    }
 
     if (allPlaces.length === 0) {
       this.setState({
@@ -108,7 +118,7 @@ class HomeContainer extends PureComponent<Props, State> {
     const checkIsSameData = (): boolean => {
       let isDataRepeated;
 
-      for (let i = 0; i < places.length; i++) {
+      for (let i = 0; i < allPlaces.length; i++) {
         isDataRepeated = placesDataset.includes(places[i]);
 
         if (isDataRepeated) {
@@ -119,15 +129,16 @@ class HomeContainer extends PureComponent<Props, State> {
       return false;
     };
 
-    const hasRepeatedData = checkIsSameData();
+    const isSameData = checkIsSameData();
 
-    if (loading || hasRepeatedData) {
+    if (loading || isSameData) {
       return;
     }
 
     this.setState({
+      isAllDataFetched:
+        allPlaces.length < CONSTANTS.VALUES.LIMIT_ITEMS_RECEIVED_PER_REQUEST,
       placesDataset: [...placesDataset, ...allPlaces],
-      isAllDataFetched: false,
     });
   }
 
@@ -149,17 +160,24 @@ class HomeContainer extends PureComponent<Props, State> {
 
     getAllPlaces(userLocation, {
       ...currentFilter,
+      _limit: CONSTANTS.VALUES.LIMIT_ITEMS_RECEIVED_PER_REQUEST,
       _page: currentFetchPage + 1,
-      _limit: 5,
     });
   };
 
   onSearchWithFilter = (filter: Object): void => {
+    const { navigation } = this.props;
+
+    navigation.setParams({
+      [CONSTANTS.PARAMS.SHOULD_RESET_SEARCH_INPUT]: true,
+    });
+
     this.setState(
       {
         currentFilter: filter,
         currentFetchPage: 0,
         isFilterOpen: false,
+        placesDataset: [],
       },
       () => this.onFetchData(),
     );
@@ -170,6 +188,7 @@ class HomeContainer extends PureComponent<Props, State> {
       {
         currentFilter: { name: placeName },
         currentFetchPage: 0,
+        placesDataset: [],
       },
       () => this.onFetchData(),
     );
@@ -238,13 +257,21 @@ class HomeContainer extends PureComponent<Props, State> {
     });
   };
 
+  onPressDarkLayer = (): void => {
+    this.setState({
+      shouldShowDarkLayer: false,
+    });
+
+    Keyboard.dismiss();
+  };
+
   checkIsEnableToRefetchData = (): boolean => {
     const currentTimeStamp = new Date().getTime();
     const timestampDifference = currentTimeStamp - this._lastFetchTimestamp;
 
     this._lastFetchTimestamp = currentTimeStamp;
 
-    if (timestampDifference < 750) {
+    if (timestampDifference < 500) {
       return false;
     }
 
@@ -271,6 +298,7 @@ class HomeContainer extends PureComponent<Props, State> {
         onSearchWithFilter={this.onSearchWithFilter}
         shouldShowDarkLayer={shouldShowDarkLayer}
         onSetFlatListRef={this.onSetFlatListRef}
+        onPressDarkLayer={this.onPressDarkLayer}
         onPressListItem={this.onPressListItem}
         onSetMapHeight={this.onSetMapHeight}
         onToggleFilter={this.onToggleFilter}

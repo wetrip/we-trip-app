@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import {
-  TouchableOpacity, Platform, View, Text,
+  TouchableOpacity, Platform, Keyboard, View, Text,
 } from 'react-native';
 import styled from 'styled-components';
 
@@ -33,10 +33,42 @@ type Props = {
 };
 
 class Header extends Component<Props, State> {
+  _inputRef: Object = null;
+
   state = {
+    isInputFocused: false,
     indexIconSelected: 0,
     placeName: '',
   };
+
+  componentDidMount() {
+    if (Platform.OS === 'android') {
+      this._keyboardWillHideListener = Keyboard.addListener(
+        'keyboardDidHide',
+        () => {
+          this.handleInputFocus(false);
+          this._inputRef.blur();
+        },
+      );
+    }
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    const { navigation } = nextProps;
+    const { params } = navigation.state;
+    const { placeName } = this.state;
+
+    if (params[CONSTANTS.PARAMS.SHOULD_RESET_SEARCH_INPUT] && placeName) {
+      this._inputRef.clear();
+    }
+  }
+
+  componentWillUnmount() {
+    if (Platform.OS === 'android') {
+      this._keyboardWillHideListener.remove();
+    }
+  }
+
 
   onTypePlaceName = (placeName: string): void => {
     this.setState({
@@ -44,13 +76,25 @@ class Header extends Component<Props, State> {
     });
   };
 
-  onPressIconButton = (): void => {
-    const { indexIconSelected } = this.state;
+  getItemFromNavigationProps = (id: string): Function => {
     const { navigation } = this.props;
     const { params } = navigation.state;
 
-    const onChooseScreenType = params[CONSTANTS.PARAMS.CHANGE_HOME_SCREEN_TYPE];
+    return params[id];
+  };
+
+  onPressIconButton = (): void => {
+    const { indexIconSelected, isInputFocused } = this.state;
+
+    if (isInputFocused) {
+      return;
+    }
+
     const newIndex = indexIconSelected === 0 ? 1 : 0;
+
+    const onChooseScreenType = this.getItemFromNavigationProps(
+      CONSTANTS.PARAMS.CHANGE_HOME_SCREEN_TYPE,
+    );
 
     this.setState(
       {
@@ -58,6 +102,42 @@ class Header extends Component<Props, State> {
       },
       () => onChooseScreenType(newIndex),
     );
+  };
+
+  handleInputFocus = (isFocused: boolean): void => {
+    const onToggleDarkLayer = this.getItemFromNavigationProps(
+      CONSTANTS.PARAMS.ON_TOGGLE_DARK_LAYER,
+    );
+
+    this.setState({
+      isInputFocused: isFocused,
+    });
+
+    onToggleDarkLayer(isFocused);
+  };
+
+  handleSearch = (): void => {
+    const onSearchPlaces = this.getItemFromNavigationProps(
+      CONSTANTS.PARAMS.ON_SEARCH_PLACE,
+    );
+
+    const { placeName } = this.state;
+
+    if (placeName) {
+      onSearchPlaces(placeName);
+    }
+  };
+
+  onPressFilter = (): void => {
+    const { isInputFocused } = this.state;
+
+    const onToggleFilter = this.getItemFromNavigationProps(
+      CONSTANTS.PARAMS.TOGGLE_FILTER,
+    );
+
+    if (!isInputFocused) {
+      onToggleFilter();
+    }
   };
 
   renderButtonWithIcon = (
@@ -83,23 +163,21 @@ class Header extends Component<Props, State> {
       return null;
     }
 
-    const { indexIconSelected, placeName } = this.state;
-
+    const { indexIconSelected } = this.state;
     const leftIconName = indexIconSelected === 0 ? 'map' : 'format-list-bulleted';
-
-    const onToggleDarkLayer = params[CONSTANTS.PARAMS.ON_TOGGLE_DARK_LAYER];
-    const onSearchPlaces = params[CONSTANTS.PARAMS.ON_SEARCH_PLACE];
-    const onToggleFilter = params[CONSTANTS.PARAMS.TOGGLE_FILTER];
 
     return (
       <Wrapper>
         {this.renderButtonWithIcon(leftIconName, this.onPressIconButton)}
         <SearchPlaceTextInput
-          onSearchPlace={() => onSearchPlaces(placeName)}
+          handleInputFocus={this.handleInputFocus}
           onTypePlaceName={this.onTypePlaceName}
-          onToggleDarkLayer={onToggleDarkLayer}
+          onSearchPlace={this.handleSearch}
+          onSetInputRef={(ref) => {
+            this._inputRef = ref;
+          }}
         />
-        {this.renderButtonWithIcon('filter-variant', onToggleFilter)}
+        {this.renderButtonWithIcon('filter-variant', this.onPressFilter)}
       </Wrapper>
     );
   }

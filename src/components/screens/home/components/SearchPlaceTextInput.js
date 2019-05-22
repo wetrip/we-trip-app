@@ -41,14 +41,16 @@ const IconWrapper = styled(View)`
 `;
 
 type Props = {
-  onToggleDarkLayer: Function,
+  handleInputFocus: Function,
   onTypePlaceName: Function,
   onSearchPlace: Function,
+  onSetInputRef: Function,
 };
 
 const SearchPlaceTextInput = ({
-  onToggleDarkLayer,
+  handleInputFocus,
   onTypePlaceName,
+  onSetInputRef,
   onSearchPlace,
 }: Props): Object => (
   <Wrapper>
@@ -61,8 +63,9 @@ const SearchPlaceTextInput = ({
     </IconWrapper>
     <Input
       onChangeText={text => onTypePlaceName(text)}
-      onFocus={() => onToggleDarkLayer(true)}
-      onBlur={() => onToggleDarkLayer(false)}
+      onFocus={() => handleInputFocus(true)}
+      onBlur={() => handleInputFocus(false)}
+      ref={input => onSetInputRef(input)}
       onSubmitEditing={onSearchPlace}
     />
   </Wrapper>
