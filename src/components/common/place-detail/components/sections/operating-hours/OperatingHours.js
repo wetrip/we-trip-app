@@ -11,44 +11,6 @@ import appSyles from '../../../../../../styles';
 import SectionTitle from '../../SectionTitle';
 import DefaultText from '../../DefaultText';
 
-const OPERATING_HOURS = [
-  {
-    dayOfWeek: 0,
-    openAt: '07:00',
-    closeAt: '19:00',
-  },
-  {
-    dayOfWeek: 1,
-    openAt: '15:00',
-    closeAt: '18:00',
-  },
-  {
-    dayOfWeek: 2,
-    openAt: '11:00',
-    closeAt: '17:00',
-  },
-  {
-    dayOfWeek: 3,
-    openAt: '10:00',
-    closeAt: '16:00',
-  },
-  {
-    dayOfWeek: 4,
-    openAt: '04:00',
-    closeAt: '15:00',
-  },
-  {
-    dayOfWeek: 5,
-    openAt: '09:00',
-    closeAt: '14:00',
-  },
-  {
-    dayOfWeek: 6,
-    openAt: '07:00',
-    closeAt: '13:00',
-  },
-];
-
 const List = styled(FlatList)`
   margin-top: ${({ theme }) => theme.metrics.mediumSize}px;
   margin-bottom: ${({ theme }) => theme.metrics.smallSize}px;
@@ -59,11 +21,21 @@ const Row = styled(View)`
   margin-bottom: ${({ withMarginBottom, theme }) => (withMarginBottom ? theme.metrics.mediumSize : 0)}px;
 `;
 
+type OperatingHour = {
+  dayOfWeek: number,
+  closeAt: string,
+  openAt: string,
+};
+
+type Props = {
+  operatingHours: Array<OperatingHour>,
+};
+
 type State = {
   indexDaySelected: number,
 };
 
-class OperatingHours extends Component<{}, State> {
+class OperatingHours extends Component<Props, State> {
   state = {
     indexDaySelected: 0,
   };
@@ -76,7 +48,8 @@ class OperatingHours extends Component<{}, State> {
 
   render() {
     const { indexDaySelected } = this.state;
-    const { openAt, closeAt } = OPERATING_HOURS[indexDaySelected];
+    const { operatingHours } = this.props;
+    const { openAt, closeAt } = operatingHours[indexDaySelected];
 
     return (
       <Fragment>
@@ -86,7 +59,7 @@ class OperatingHours extends Component<{}, State> {
           showsHorizontalScrollIndicator={false}
           alwaysBounceHorizontal={false}
           extraData={this.state}
-          data={OPERATING_HOURS}
+          data={operatingHours}
           horizontal
           renderItem={({ item, index }) => {
             const dayOfWeek = CONSTANTS.VALUES.DAYS_OF_WEEK[item.dayOfWeek];

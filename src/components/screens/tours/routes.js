@@ -2,7 +2,7 @@ import React from 'react';
 import { createStackNavigator } from 'react-navigation';
 import { Platform } from 'react-native';
 
-import PlaceDetail from '../../common/place-detail/PlaceDetailContainer';
+import PlaceDetail from '../../common/place-detail/PlaceDetail';
 import TourDetail from './components/tour-detail/TourDetail';
 import CONSTANTS from '../../../utils/CONSTANTS';
 import appStyles from '../../../styles';

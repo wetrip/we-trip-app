@@ -16,22 +16,20 @@ const ImagesList = styled(FlatList)`
   margin-bottom: ${({ theme }) => 1.5 * theme.metrics.extraLargeSize}px;
 `;
 
-const IMAGES = [
-  {
-    url:
-      'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/coco-bambu-sul.jpeg',
-  },
-  {
-    url:
-      'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/misaki.jpeg',
-  },
-  {
-    url:
-      'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/cabana-riomar.jpeg',
-  },
-];
+type Image = {
+  url: string,
+};
 
-class PlaceImagesList extends Component {
+type Props = {
+  images: Array<Image>,
+};
+
+type State = {
+  isModalImagesOpen: boolean,
+  indexImageSelected: number,
+};
+
+class PlaceImagesList extends Component<Props, State> {
   state = {
     isModalImagesOpen: false,
     indexImageSelected: 0,
@@ -54,14 +52,11 @@ class PlaceImagesList extends Component {
 
   render() {
     const { indexImageSelected, isModalImagesOpen } = this.state;
+    const { images } = this.props;
 
     return (
       <Fragment>
         <ImagesList
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={item => item.url}
-          data={IMAGES}
-          horizontal
           renderItem={({ item, index }) => (
             <PlaceImagesListItem
               onPressImage={() => this.onPressImage(index)}
@@ -69,13 +64,17 @@ class PlaceImagesList extends Component {
               imageURL={item.url}
             />
           )}
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={item => item.url}
+          data={images}
+          horizontal
         />
         {isModalImagesOpen && (
           <ImagesListWithZoom
             onToggleModalImages={this.onToggleModalImages}
             indexImageSelected={indexImageSelected}
             isModalImagesOpen={isModalImagesOpen}
-            images={IMAGES}
+            images={images}
           />
         )}
       </Fragment>

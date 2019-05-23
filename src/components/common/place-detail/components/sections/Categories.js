@@ -46,8 +46,8 @@ const Categories = ({ categories }: Props): Object => (
           key={category.id}
         >
           <DefaultText
-            weight={700}
             color={appStyles.colors.textColor}
+            weight={700}
           >
             {category.name}
           </DefaultText>

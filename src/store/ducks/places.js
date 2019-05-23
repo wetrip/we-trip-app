@@ -1,55 +1,52 @@
 export const Types = {
-  GET_ALL_PLACES_REQUEST: 'GET_ALL_PLACES_REQUEST',
-  GET_ALL_PLACES_SUCCESS: 'GET_ALL_PLACES_SUCCESS',
-  GET_ALL_PLACES_FAILURE: 'GET_ALL_PLACES_FAILURE',
+  GET_PLACES_REQUEST: '@places/GET_PLACES_REQUEST',
+  GET_PLACES_SUCCESS: '@places/GET_PLACES_SUCCESS',
+  GET_PLACES_FAILURE: '@places/GET_PLACES_FAILURE',
 };
 
 const INITIAL_STATE = {
-  loadingSinglePlace: false,
-  loadingAllPlaces: false,
-  singlePlace: null,
-  allPlaces: [],
+  loading: false,
   error: false,
+  data: [],
 };
 
 export const Creators = {
-  getAllPlaces: (userLocation, queryParams) => ({
-    type: Types.GET_ALL_PLACES_REQUEST,
+  getPlaces: (userLocation, queryParams) => ({
+    type: Types.GET_PLACES_REQUEST,
     payload: { userLocation, queryParams },
   }),
 
-  getAllPlacesSuccess: places => ({
-    type: Types.GET_ALL_PLACES_SUCCESS,
+  getPlacesSuccess: places => ({
+    type: Types.GET_PLACES_SUCCESS,
     payload: { places },
   }),
 
-  getAllPlacesFailure: params => ({
-    type: Types.GET_ALL_PLACES_FAILURE,
+  getPlacesFailure: () => ({
+    type: Types.GET_PLACES_FAILURE,
   }),
 };
 
 const places = (state = INITIAL_STATE, { type, payload }) => {
   switch (type) {
-    case Types.GET_ALL_PLACES_REQUEST:
+    case Types.GET_PLACES_REQUEST:
       return {
         ...state,
-        loadingAllPlaces: true,
-        allPlaces: [],
+        loading: true,
         error: false,
+        data: [],
       };
 
-    case Types.GET_ALL_PLACES_SUCCESS:
+    case Types.GET_PLACES_SUCCESS:
       return {
         ...state,
-        loadingAllPlaces: false,
-        allPlaces: payload.places,
+        loading: false,
+        data: payload.places,
       };
 
-    case Types.GET_ALL_PLACES_FAILURE:
+    case Types.GET_PLACES_FAILURE:
       return {
         ...state,
-        loadingAllPlaces: false,
-        allPlaces: [],
+        loading: false,
         error: true,
       };
 
