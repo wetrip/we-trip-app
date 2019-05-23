@@ -117,7 +117,7 @@ const PlacesBottomList = ({
       }}
       renderItem={({ item, index }) => (
         <DefaultPlaceListItemWithCard
-          onPressListItem={() => onPressListItem(item)}
+          onPressListItem={() => onPressListItem(item.id)}
           distanceToUser={item.distanceToUser}
           imageURL={item.images[index].url}
           isOpen={item.isOpen}

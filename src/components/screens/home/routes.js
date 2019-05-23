@@ -2,7 +2,7 @@ import React from 'react';
 import { createStackNavigator } from 'react-navigation';
 import { Platform } from 'react-native';
 
-import PlaceDetail from '../../common/place-detail/PlaceDetail';
+import PlaceDetailContainer from '../../common/place-detail/PlaceDetailContainer';
 import CONSTANTS from '../../../utils/CONSTANTS';
 import Header from './components/Header';
 import appStyles from '../../../styles';
@@ -26,7 +26,7 @@ const RootStack = createStackNavigator(
     },
 
     [CONSTANTS.ROUTES.PLACE_DETAIL]: {
-      screen: PlaceDetail,
+      screen: PlaceDetailContainer,
       navigationOptions: () => ({
         headerTintColor: appStyles.colors.textColor,
         headerTransparent: true,
