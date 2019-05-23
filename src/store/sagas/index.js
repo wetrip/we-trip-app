@@ -2,10 +2,8 @@ import { takeLatest, all } from 'redux-saga/effects';
 
 import { Types as PlacesTypes } from '../ducks/places';
 
-import { getAllPlaces } from './places';
+import { getPlaces } from './places';
 
 export default function* rootSaga() {
-  return yield all([
-    takeLatest(PlacesTypes.GET_ALL_PLACES_REQUEST, getAllPlaces),
-  ]);
+  return yield all([takeLatest(PlacesTypes.GET_PLACES_REQUEST, getPlaces)]);
 }

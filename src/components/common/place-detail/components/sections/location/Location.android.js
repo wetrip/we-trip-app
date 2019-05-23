@@ -41,16 +41,22 @@ const AddressText = styled(Text).attrs({
   font-weight: 600;
 `;
 
-const location = {
-  latitude: -3.8406333,
-  longitude: -38.5606571,
-};
-
 const ASPECT_RATIO = appStyles.metrics.width / appStyles.metrics.height;
 const LATITUDE_DELTA = 0.005;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-const Location = (): Object => (
+type LocationProps = {
+  longitude: number,
+  latitude: number,
+  address: string,
+};
+
+type Props = {
+  location: LocationProps,
+  placeName: string,
+};
+
+const Location = ({ location, placeName }: Props): Object => (
   <Fragment>
     <SectionTitle>Location</SectionTitle>
     <AddressWrapper>
@@ -65,7 +71,7 @@ const Location = (): Object => (
         withMarginRight
         weight={600}
       >
-        R. da Saudade 43-15 - Lisboa, Portugal Lisboa, Portugal
+        {location.address}
       </DefaultText>
     </AddressWrapper>
     <Wrapper>
@@ -85,20 +91,11 @@ const Location = (): Object => (
           latitudeDelta: LATITUDE_DELTA,
         }}
       >
-        <Marker
-          coordinate={location}
-        >
-          <Icon
-            color={appStyles.colors.red}
-            name="map-marker"
-            size={36}
-          />
+        <Marker coordinate={location}>
+          <Icon color={appStyles.colors.red} name="map-marker" size={36} />
         </Marker>
       </MapContainer>
-      <OpenMapButton
-        location={location}
-        placeName="Bairro"
-      />
+      <OpenMapButton placeName={placeName} location={location} />
     </Wrapper>
   </Fragment>
 );

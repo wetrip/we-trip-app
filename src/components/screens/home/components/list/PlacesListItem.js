@@ -37,24 +37,28 @@ const PlaceImage = styled(FastImage).attrs(({ uri }) => ({
   position: absolute;
 `;
 
+type Image = {
+  url: string,
+};
+
 type Props = {
   onPressListItem: Function,
-  imageURL: string,
+  images: Array<Image>,
   name: string,
   id: string,
 };
 
 const PlacesListItem = ({
   onPressListItem,
+  images,
   name,
-  imageURL,
   id,
 }: Props): Object => (
   <Wrapper
-    onPress={() => onPressListItem(id)}
+    onPress={onPressListItem}
   >
     <PlaceImage
-      uri={imageURL}
+      uri={images[0].url}
     />
     <DarkLayer>
       <PlaceName>{name}</PlaceName>

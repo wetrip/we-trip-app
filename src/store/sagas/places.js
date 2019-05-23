@@ -5,7 +5,7 @@ import api from '../../services/api';
 
 import { Creators as PlacesCreators } from '../ducks/places';
 
-export function* getAllPlaces({ payload }) {
+export function* getPlaces({ payload }) {
   try {
     const { userLocation, queryParams } = payload;
     const requestParams = {};
@@ -30,8 +30,8 @@ export function* getAllPlaces({ payload }) {
       headers,
     });
 
-    yield put(PlacesCreators.getAllPlacesSuccess(data));
-  } catch (err) {
-    yield put(PlacesCreators.getAllPlacesFailure());
+    yield put(PlacesCreators.getPlacesSuccess(data));
+  } catch {
+    yield put(PlacesCreators.getPlacesFailure());
   }
 }

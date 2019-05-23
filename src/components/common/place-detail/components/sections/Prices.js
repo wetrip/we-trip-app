@@ -16,36 +16,26 @@ const Row = styled(View)`
   margin-bottom: ${({ isLast, theme }) => (isLast ? 0 : theme.metrics.mediumSize)}px;
 `;
 
-const PRICES = [
-  {
-    PriceTypeId: 1,
-    price: '11,90 €',
-  },
-  {
-    PriceTypeId: 2,
-    price: '12,90 €',
-  },
-  {
-    PriceTypeId: 3,
-    price: '9,90 €',
-  },
-  {
-    PriceTypeId: 4,
-    price: '10,90 €',
-  },
-];
+type Price = {
+  priceTypeId: number,
+  price: string,
+};
 
-const Prices = (): Object => (
+type Props = {
+  prices: Array<Price>,
+};
+
+const Prices = ({ prices }: Props): Object => (
   <Fragment>
     <SectionTitle>Prices</SectionTitle>
     <SectionWrapper>
-      {PRICES.map((item, index) => {
-        const label = CONSTANTS.VALUES.TYPE_PRICES_TICKETS[item.PriceTypeId];
+      {prices.map((item, index) => {
+        const label = CONSTANTS.VALUES.TYPE_PRICES_TICKETS[item.priceTypeId];
 
         return (
           <Row
-            isLast={index === PRICES.length - 1}
-            key={item.PriceTypeId}
+            isLast={index === prices.length - 1}
+            key={item.priceTypeId}
           >
             <DefaultText
               color={appStyles.colors.textColor}

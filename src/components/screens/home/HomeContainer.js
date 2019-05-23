@@ -12,31 +12,58 @@ import HomeComponent from './components/HomeComponent';
 import CONSTANTS from '../../../utils/CONSTANTS';
 import appStyles from '../../../styles';
 
+type LatLng = {
+  longitude: number,
+  latitude: number,
+};
+
+type Image = {
+  url: string,
+};
+
+type OperatingHoursType = {
+  dayOfWeek: number,
+  closeAt: string,
+  openAt: string,
+};
+
+type PricesType = {
+  priceTypeId: number,
+  price: string,
+};
+
+type Ticket = {
+  isAccessible: boolean,
+  stationName: string,
+  description: string,
+  isNocturne: boolean,
+  isDiurnal: boolean,
+  id: number,
+};
+
+type Transport = {
+  transportTypeId: number,
+  tickets: Array<Ticket>,
+  price: string,
+};
+
 type Place = {
+  operatingHours: Array<OperatingHoursType>,
+  images: Array<Image>,
   distanceToUser: number,
+  description: string,
   location: LatLng,
-  imageURL: string,
   isOpen: boolean,
   name: string,
   id: number,
 };
 
-type PlaceProp = {
-  loadingAllPlaces: boolean,
-  allPlaces: Array<Place>,
-  error: boolean,
-};
-
 type Props = {
-  places: Array<PlaceProp>,
-  getAllPlaces: Function,
+  places: Array<Place>,
+  getPlaces: Function,
   navigation: Object,
   loading: boolean,
-};
-
-type LatLng = {
-  longitude: number,
-  latitude: number,
+  error: boolean,
 };
 
 type State = {
@@ -44,8 +71,10 @@ type State = {
   shouldShowDarkLayer: boolean,
   indexScreenSelected: number,
   placesDataset: Array<Place>,
+  isAllDataFetched: boolean,
+  currentFetchPage: number,
+  currentFilter: Object,
   isFilterOpen: boolean,
-  currentFetchPage: 0,
   userLocation: LatLng,
   mapHeight: number,
 };
@@ -68,7 +97,7 @@ class HomeContainer extends PureComponent<Props, State> {
   };
 
   async componentDidMount() {
-    const { getAllPlaces, navigation } = this.props;
+    const { navigation } = this.props;
     let userLocation;
 
     navigation.setParams({
@@ -94,8 +123,7 @@ class HomeContainer extends PureComponent<Props, State> {
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    const { navigation, places } = nextProps;
-    const { loading, allPlaces } = places;
+    const { navigation, loading, places } = nextProps;
     const { placesDataset } = this.state;
     const { params } = navigation.state;
 
@@ -107,18 +135,10 @@ class HomeContainer extends PureComponent<Props, State> {
       return;
     }
 
-    if (allPlaces.length === 0) {
-      this.setState({
-        isAllDataFetched: true,
-      });
-
-      return;
-    }
-
     const checkIsSameData = (): boolean => {
       let isDataRepeated;
 
-      for (let i = 0; i < allPlaces.length; i++) {
+      for (let i = 0; i < places.length; i++) {
         isDataRepeated = placesDataset.includes(places[i]);
 
         if (isDataRepeated) {
@@ -137,16 +157,14 @@ class HomeContainer extends PureComponent<Props, State> {
 
     this.setState({
       isAllDataFetched:
-        allPlaces.length < CONSTANTS.VALUES.LIMIT_ITEMS_RECEIVED_PER_REQUEST,
-      placesDataset: [...placesDataset, ...allPlaces],
+        places.length < CONSTANTS.VALUES.LIMIT_ITEMS_RECEIVED_PER_REQUEST,
+      placesDataset: [...placesDataset, ...places],
     });
   }
 
   onFetchData = (): void => {
     const { currentFetchPage, userLocation, currentFilter } = this.state;
-
-    const { getAllPlaces, places } = this.props;
-    const { loading } = places;
+    const { getPlaces, loading } = this.props;
 
     const isEnabledToRefetchData = this.checkIsEnableToRefetchData();
 
@@ -158,7 +176,7 @@ class HomeContainer extends PureComponent<Props, State> {
       currentFetchPage: currentFetchPage + 1,
     });
 
-    getAllPlaces(userLocation, {
+    getPlaces(userLocation, {
       ...currentFilter,
       _limit: CONSTANTS.VALUES.LIMIT_ITEMS_RECEIVED_PER_REQUEST,
       _page: currentFetchPage + 1,
@@ -208,7 +226,7 @@ class HomeContainer extends PureComponent<Props, State> {
     const { navigation } = this.props;
 
     navigation.navigate(CONSTANTS.ROUTES.PLACE_DETAIL, {
-      [CONSTANTS.PARAMS.PLACE_ID]: id,
+      [CONSTANTS.PARAMS.PLACE_SELECTED]: id,
     });
   };
 
@@ -226,16 +244,10 @@ class HomeContainer extends PureComponent<Props, State> {
     });
   };
 
-  onChooseScreenIndex = (index: number): void => {
-    const { placesDataset } = this.state;
-
-    if (placesDataset === 0) {
-      return;
-    }
-
+  onChooseScreenIndex = (indexScreenSelected: number): void => {
     this.setState(
       {
-        indexScreenSelected: index,
+        indexScreenSelected,
       },
       () => {
         this._outterListRef.scrollTo({
@@ -289,13 +301,12 @@ class HomeContainer extends PureComponent<Props, State> {
       mapHeight,
     } = this.state;
 
-    const { places } = this.props;
-    const { loadingAllPlaces, error } = places;
+    const { places, loading, error } = this.props;
 
     return (
       <HomeComponent
-        loading={isGettingUserLocation || loadingAllPlaces}
         onSearchWithFilter={this.onSearchWithFilter}
+        loading={isGettingUserLocation || loading}
         shouldShowDarkLayer={shouldShowDarkLayer}
         onSetFlatListRef={this.onSetFlatListRef}
         onPressDarkLayer={this.onPressDarkLayer}
@@ -318,7 +329,9 @@ class HomeContainer extends PureComponent<Props, State> {
 const mapDispatchToProps = dispatch => bindActionCreators(PlaceCreators, dispatch);
 
 const mapStateToProps = state => ({
-  places: state.places,
+  loading: state.places.loading,
+  places: state.places.data,
+  error: state.places.error,
 });
 
 export default connect(

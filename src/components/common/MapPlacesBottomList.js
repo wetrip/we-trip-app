@@ -29,14 +29,46 @@ const onMomentumScrollEnd = (
 };
 
 type LatLng = {
-  latitude: number,
   longitude: number,
+  latitude: number,
+};
+
+type Image = {
+  url: string,
+};
+
+type OperatingHoursType = {
+  dayOfWeek: number,
+  closeAt: string,
+  openAt: string,
+};
+
+type PricesType = {
+  priceTypeId: number,
+  price: string,
+};
+
+type Ticket = {
+  isAccessible: boolean,
+  stationName: string,
+  description: string,
+  isNocturne: boolean,
+  isDiurnal: boolean,
+  id: number,
+};
+
+type Transport = {
+  transportTypeId: number,
+  tickets: Array<Ticket>,
+  price: string,
 };
 
 type Place = {
+  operatingHours: Array<OperatingHoursType>,
+  images: Array<Image>,
   distanceToUser: number,
+  description: string,
   location: LatLng,
-  imageURL: string,
   isOpen: boolean,
   name: string,
   id: number,
@@ -83,11 +115,11 @@ const PlacesBottomList = ({
 
         return null;
       }}
-      renderItem={({ item }) => (
+      renderItem={({ item, index }) => (
         <DefaultPlaceListItemWithCard
-          onPressListItem={() => onPressListItem(item.id)}
+          onPressListItem={() => onPressListItem(item)}
           distanceToUser={item.distanceToUser}
-          imageURL={item.imageURL}
+          imageURL={item.images[index].url}
           isOpen={item.isOpen}
           name={item.name}
         />
