@@ -12,48 +12,11 @@ import HomeComponent from './components/HomeComponent';
 import CONSTANTS from '../../../utils/CONSTANTS';
 import appStyles from '../../../styles';
 
-type LatLng = {
-  longitude: number,
-  latitude: number,
-};
-
-type Image = {
-  url: string,
-};
-
-type OperatingHoursType = {
-  dayOfWeek: number,
-  closeAt: string,
-  openAt: string,
-};
-
-type PricesType = {
-  priceTypeId: number,
-  price: string,
-};
-
-type Ticket = {
-  isAccessible: boolean,
-  stationName: string,
-  description: string,
-  isNocturne: boolean,
-  isDiurnal: boolean,
-  id: number,
-};
-
-type Transport = {
-  transportTypeId: number,
-  tickets: Array<Ticket>,
-  price: string,
-};
-
 type Place = {
-  operatingHours: Array<OperatingHoursType>,
-  images: Array<Image>,
   distanceToUser: number,
-  description: string,
   location: LatLng,
   isOpen: boolean,
+  image: string,
   name: string,
   id: number,
 };
@@ -226,7 +189,7 @@ class HomeContainer extends PureComponent<Props, State> {
     const { navigation } = this.props;
 
     navigation.navigate(CONSTANTS.ROUTES.PLACE_DETAIL, {
-      [CONSTANTS.PARAMS.PLACE_SELECTED]: id,
+      [CONSTANTS.PARAMS.PLACE_ID]: id,
     });
   };
 

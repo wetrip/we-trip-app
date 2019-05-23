@@ -83,7 +83,7 @@ const PlacesList = ({
     renderItem={({ item, index }) => (
       <PlacesListItem
         {...item}
-        onPressListItem={() => onPressListItem(item)}
+        onPressListItem={() => onPressListItem(item.id)}
       />
     )}
     showsVerticalScrollIndicator={false}
