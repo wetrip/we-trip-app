@@ -37,8 +37,8 @@ const renderFooterLoading = (isLoading: boolean): Object => (
 
 type Place = {
   distanceToUser: number,
+  image: Array<string>,
   location: LatLng,
-  imageURL: string,
   isOpen: boolean,
   name: string,
   id: number,
@@ -49,6 +49,7 @@ type Props = {
   isAllDataFetched: boolean,
   onPressListItem: Function,
   onRefreshData: Function,
+  isRefreshing: boolean,
   places: Array<Place>,
   loading: boolean,
 };
@@ -58,6 +59,7 @@ const PlacesList = ({
   onEndListReached,
   onPressListItem,
   onRefreshData,
+  isRefreshing,
   loading,
   places,
 }): Object => (
@@ -91,9 +93,9 @@ const PlacesList = ({
     refreshControl={
       <RefreshControl
         progressBackgroundColor={appStyles.colors.primaryColor}
-        refreshing={places.length === 0 && loading}
         tintColor={appStyles.colors.primaryColor}
         colors={[appStyles.colors.white]}
+        refreshing={isRefreshing}
         onRefresh={onRefreshData}
       />
     }

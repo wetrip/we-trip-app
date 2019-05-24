@@ -12,45 +12,6 @@ import TourList from './ToursList';
 import TourMap from './ToursMap';
 import Header from './Header';
 
-const PLACES = [
-  {
-    location: {
-      latitude: -3.7273013,
-      longitude: -38.5897033,
-    },
-    isOpen: false,
-    imageURL:
-      'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/misaki.jpeg',
-    distanceToUser: 1.1,
-    name: 'Place 02',
-    id: 2,
-  },
-  {
-    location: {
-      latitude: -3.7451878,
-      longitude: -38.5736122,
-    },
-    isOpen: true,
-    imageURL:
-      'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/cabana-riomar.jpeg',
-    distanceToUser: 3.7,
-    name: 'Place 03',
-    id: 3,
-  },
-  {
-    location: {
-      latitude: -3.8406333,
-      longitude: -38.5606571,
-    },
-    isOpen: true,
-    imageURL:
-      'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/coco-bambu-sul.jpeg',
-    name: 'Stenio Wagner Pereira de Freitas Stenio Wagner Pereira de Freitas',
-    distanceToUser: 4,
-    id: 1,
-  },
-];
-
 const Wrapper = styled(View)`
   flex: 1;
   justify-content: flex-end;
@@ -61,9 +22,40 @@ const ListWrapper = styled(ScrollView)`
   flex: 1;
 `;
 
+type LatLng = {
+  longitude: number,
+  latitude: number,
+};
+
+type Place = {
+  distanceToUser: number,
+  image: Array<string>,
+  location: LatLng,
+  isOpen: boolean,
+  name: string,
+  id: number,
+};
+
+type Tour = {
+  destinations: Array<Place>,
+  description: string,
+  image: string,
+  title: string,
+  id: number,
+};
+
+type Props = {
+  navigation: Object,
+};
+
+type State = {
+  indexMapMarkerSelected: number,
+  indexScreenSelected: number,
+};
+
 class TourDetail extends Component {
-  _containerLisRef: Object = null;
   _mapPlacesListRef: Object = null;
+  _containerLisRef: Object = null;
   _mapRef: Object = null;
 
   state = {
@@ -96,10 +88,11 @@ class TourDetail extends Component {
 
   onSwipeMapPlacesList = (indexSelected: number): void => {
     const { indexMapMarkerSelected } = this.state;
-    
+    const { destinations } = this.getTourFromProps();
+
     const isSameIndex = indexMapMarkerSelected === indexSelected;
-    const indexOutOfBounds = indexSelected > PLACES.length - 1;
-    
+    const indexOutOfBounds = indexSelected > destinations.length - 1;
+
     if (isSameIndex || indexOutOfBounds) {
       return;
     }
@@ -136,16 +129,15 @@ class TourDetail extends Component {
   };
 
   onFitMapCoordinates = (indexMapMarkerSelected: number): void => {
-    const places = PLACES;
-
+    const { destinations } = this.getTourFromProps();
     const edgePadding = getMapEdgePadding();
 
-    const markers = indexMapMarkerSelected < places.length - 1
+    const markers = indexMapMarkerSelected < destinations.length - 1
       ? [
-        places[indexMapMarkerSelected].location,
-        places[indexMapMarkerSelected + 1].location,
+        destinations[indexMapMarkerSelected].location,
+        destinations[indexMapMarkerSelected + 1].location,
       ]
-      : [places[indexMapMarkerSelected].location];
+      : [destinations[indexMapMarkerSelected].location];
 
     this._mapRef.fitToCoordinates(markers, {
       animated: true,
@@ -161,22 +153,29 @@ class TourDetail extends Component {
     this._mapPlacesListRef = ref;
   };
 
+  getTourFromProps = (): Tour => {
+    const { navigation } = this.props;
+    const { params } = navigation.state;
+
+    return params[CONSTANTS.PARAMS.TOUR_SELECTED];
+  };
+
   render() {
-    const {
-      indexMapMarkerSelected,
-      isMarkerPressed,
-      indexScreenSelected,
-    } = this.state;
+    const { indexMapMarkerSelected, indexScreenSelected } = this.state;
+
+    const tour = this.getTourFromProps();
 
     const headerSubtitle = indexScreenSelected === 0
-      ? `${indexMapMarkerSelected + 1} of ${PLACES.length} Destinations`
-      : `${PLACES.length} Destinations`;
+      ? `${indexMapMarkerSelected + 1} of ${
+        tour.destinations.length
+      } Destinations`
+      : `${tour.destinations.length} Destinations`;
 
     return (
       <Fragment>
         <Header
           subTitle={headerSubtitle}
-          title="Knowing the coast"
+          title={tour.title}
         />
         <Wrapper>
           <ListWrapper
@@ -196,11 +195,11 @@ class TourDetail extends Component {
               onPressMapMarker={this.onPressMapMarker}
               onSelectPlace={this.onSelectPlace}
               onSetMapRef={this.onSetMapRef}
-              places={PLACES}
+              places={tour.destinations}
             />
             <TourList
               onSelectPlace={this.onSelectPlace}
-              places={PLACES}
+              places={tour.destinations}
             />
           </ListWrapper>
           <ScreenSwitcher

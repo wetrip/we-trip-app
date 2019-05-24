@@ -48,8 +48,8 @@ type LatLng = {
 
 type Place = {
   distanceToUser: number,
+  images: Array<string>,
   location: LatLng,
-  imageURL: string,
   isOpen: boolean,
   name: string,
   id: number,
@@ -75,7 +75,7 @@ const ToursList = ({ onSelectPlace, places }: Props): Object => (
           >
             <DefaultPlaceListItem
               distanceToUser={item.distanceToUser}
-              imageURL={item.imageURL}
+              imageURL={item.images[0]}
               isOpen={item.isOpen}
               name={item.name}
             />

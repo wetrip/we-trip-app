@@ -58,7 +58,7 @@ const PlacesListItem = ({
     onPress={onPressListItem}
   >
     <PlaceImage
-      uri={images[0].url}
+      uri={images[0]}
     />
     <DarkLayer>
       <PlaceName>{name}</PlaceName>

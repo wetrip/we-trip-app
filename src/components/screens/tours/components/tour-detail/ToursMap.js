@@ -29,8 +29,8 @@ type LatLng = {
 
 type Place = {
   distanceToUser: number,
+  images: Array<string>,
   location: LatLng,
-  imageURL: string,
   isOpen: boolean,
   name: string,
   id: number,

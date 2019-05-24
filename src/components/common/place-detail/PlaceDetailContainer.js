@@ -14,10 +14,6 @@ type LatLng = {
   latitude: number,
 };
 
-type Image = {
-  url: string,
-};
-
 type OperatingHours = {
   dayOfWeek: number,
   closeAt: string,
@@ -59,7 +55,7 @@ type Place = {
   transports: Array<Transport>,
   categories: Array<Category>,
   distanceToUser: number,
-  images: Array<Image>,
+  images: Array<string>,
   prices: Array<Price>,
   description: string,
   location: LatLng,

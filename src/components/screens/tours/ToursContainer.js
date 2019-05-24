@@ -2,113 +2,80 @@
 
 import React, { Component } from 'react';
 
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { Creators as ToursCreators } from '../../../store/ducks/tours';
+
 import ToursComponent from './components/ToursComponent';
 import CONSTANTS from '../../../utils/CONSTANTS';
 
-const TOUR = {
-  title: 'Knowing the Coast',
-  description:
-    'Wander through the wonderful portuguese beaches and learn more about the history of the the most powerful navy in Europe.',
-  imageURL:
-    'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/coco-bambu-sul.jpeg',
-  destinations: [
-    {
-      location: {
-        latitude: -3.8406333,
-        longitude: -38.5606571,
-      },
-      isOpen: true,
-      imageURL:
-        'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/coco-bambu-sul.jpeg',
-      name: 'Place 01',
-      distanceToUser: 4,
-      id: '1',
-    },
-    {
-      location: {
-        latitude: -3.7273013,
-        longitude: -38.5897033,
-      },
-      isOpen: false,
-      imageURL:
-        'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/misaki.jpeg',
-      distanceToUser: 1.1,
-      name: 'Place 02',
-      id: '2',
-    },
-    {
-      location: {
-        latitude: -3.7451878,
-        longitude: -38.5736122,
-      },
-      isOpen: true,
-      imageURL:
-        'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/cabana-riomar.jpeg',
-      distanceToUser: 3.7,
-      name: 'Place 03',
-      id: '3',
-    },
-    {
-      location: {
-        latitude: -3.8406333,
-        longitude: -38.5606571,
-      },
-      isOpen: true,
-      imageURL:
-        'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/coco-bambu-sul.jpeg',
-      name: 'Place 01',
-      distanceToUser: 4,
-      id: '12',
-    },
-    {
-      location: {
-        latitude: -3.7273013,
-        longitude: -38.5897033,
-      },
-      isOpen: false,
-      imageURL:
-        'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/misaki.jpeg',
-      distanceToUser: 1.1,
-      name: 'Place 02',
-      id: '22',
-    },
-    {
-      location: {
-        latitude: -3.7451878,
-        longitude: -38.5736122,
-      },
-      isOpen: true,
-      imageURL:
-        'https://s3-sa-east-1.amazonaws.com/bon-appetit-resources/restaurants/medium/cabana-riomar.jpeg',
-      distanceToUser: 3.7,
-      name: 'Place 03',
-      id: '23',
-    },
-  ],
+type LatLng = {
+  longitude: number,
+  latitude: number,
 };
 
-const TOURS = Array(6)
-  .fill(TOUR)
-  .map((item, index) => ({
-    ...item,
-    id: index,
-  }));
+type Place = {
+  distanceToUser: number,
+  image: Array<string>,
+  location: LatLng,
+  isOpen: boolean,
+  name: string,
+  id: number,
+};
 
-class ToursContainer extends Component {
-  onSelectTour = (tourId: number): void => {
+type Tour = {
+  destinations: Array<Place>,
+  description: string,
+  image: string,
+  title: string,
+  id: number,
+};
+
+type Props = {
+  getTours: Function,
+  tours: Array<Tour>,
+  loading: boolean,
+  error: boolean,
+};
+
+class ToursContainer extends Component<Props, {}> {
+  componentDidMount() {
+    const { getTours } = this.props;
+
+    getTours();
+  }
+
+  onSelectTour = (tour: Tour): void => {
     const { navigation, localRoutes } = this.props;
 
     navigation.navigate(localRoutes.TOUR_DETAIL, {
-      [CONSTANTS.PARAMS.TOUR_ID]: tourId,
+      [CONSTANTS.PARAMS.TOUR_SELECTED]: tour,
     });
   };
 
   render() {
-    return <ToursComponent
-      onSelectTour={this.onSelectTour}
-      tours={TOURS}
-    />;
+    const { loading, tours, error } = this.props;
+
+    return (
+      <ToursComponent
+        onSelectTour={this.onSelectTour}
+        loading={loading}
+        error={error}
+        tours={tours}
+      />
+    );
   }
 }
 
-export default ToursContainer;
+const mapStateToProps = state => ({
+  loading: state.tours.loading,
+  error: state.tours.error,
+  tours: state.tours.data,
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators(ToursCreators, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ToursContainer);

@@ -34,15 +34,11 @@ const BackButton = styled(TouchableOpacity)`
   background-color: ${({ theme }) => theme.colors.contrastColor};
 `;
 
-type Images = {
-  url: string,
-};
-
 type Props = {
   onToggleModalImages: Function,
   indexImageSelected: number,
   isModalImagesOpen: boolean,
-  images: Array<Images>,
+  images: Array<string>,
 };
 
 const ImagesListWithZoom = ({
@@ -50,37 +46,43 @@ const ImagesListWithZoom = ({
   indexImageSelected,
   isModalImagesOpen,
   images,
-}: Props): Object => (
-  <Fragment>
-    <StatusBar
-      backgroundColor={appStyles.colors.black}
-      barStyle="light-content"
-    />
-    <Modal
-      visible={isModalImagesOpen}
-      hardwareAccelerated
-      transparent
-    >
-      <ImageViewer
-        index={indexImageSelected}
-        imageUrls={images}
-        enableImageZoom
-        renderFooter={() => (
-          <FooterWrapper>
-            <BackButton
-              onPress={onToggleModalImages}
-            >
-              <Icon
-                name="arrow-left"
-                color={appStyles.colors.white}
-                size={32}
-              />
-            </BackButton>
-          </FooterWrapper>
-        )}
+}: Props): Object => {
+  const imagesWithURL = images.map(url => ({
+    url,
+  }));
+
+  return (
+    <Fragment>
+      <StatusBar
+        backgroundColor={appStyles.colors.black}
+        barStyle="light-content"
       />
-    </Modal>
-  </Fragment>
-);
+      <Modal
+        visible={isModalImagesOpen}
+        hardwareAccelerated
+        transparent
+      >
+        <ImageViewer
+          index={indexImageSelected}
+          imageUrls={imagesWithURL}
+          enableImageZoom
+          renderFooter={() => (
+            <FooterWrapper>
+              <BackButton
+                onPress={onToggleModalImages}
+              >
+                <Icon
+                  name="arrow-left"
+                  color={appStyles.colors.white}
+                  size={32}
+                />
+              </BackButton>
+            </FooterWrapper>
+          )}
+        />
+      </Modal>
+    </Fragment>
+  );
+};
 
 export default ImagesListWithZoom;
