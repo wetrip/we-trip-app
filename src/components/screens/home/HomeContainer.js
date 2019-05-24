@@ -12,11 +12,16 @@ import HomeComponent from './components/HomeComponent';
 import CONSTANTS from '../../../utils/CONSTANTS';
 import appStyles from '../../../styles';
 
+type LatLng = {
+  latitude: number,
+  longitude: number,
+};
+
 type Place = {
   distanceToUser: number,
+  image: Array<string>,
   location: LatLng,
   isOpen: boolean,
-  image: string,
   name: string,
   id: number,
 };
@@ -36,6 +41,7 @@ type State = {
   placesDataset: Array<Place>,
   isAllDataFetched: boolean,
   currentFetchPage: number,
+  isRefreshing: boolean,
   currentFilter: Object,
   isFilterOpen: boolean,
   userLocation: LatLng,
@@ -53,6 +59,7 @@ class HomeContainer extends PureComponent<Props, State> {
     indexScreenSelected: 0,
     isFilterOpen: false,
     currentFetchPage: 0,
+    isRefreshing: false,
     userLocation: null,
     placesDataset: [],
     currentFilter: {},
@@ -122,6 +129,7 @@ class HomeContainer extends PureComponent<Props, State> {
       isAllDataFetched:
         places.length < CONSTANTS.VALUES.LIMIT_ITEMS_RECEIVED_PER_REQUEST,
       placesDataset: [...placesDataset, ...places],
+      isRefreshing: false,
     });
   }
 
@@ -179,6 +187,7 @@ class HomeContainer extends PureComponent<Props, State> {
     this.setState(
       {
         currentFetchPage: 0,
+        isRefreshing: true,
         placesDataset: [],
       },
       () => this.onFetchData(),
@@ -261,6 +270,7 @@ class HomeContainer extends PureComponent<Props, State> {
       placesDataset,
       isFilterOpen,
       userLocation,
+      isRefreshing,
       mapHeight,
     } = this.state;
 
@@ -281,6 +291,7 @@ class HomeContainer extends PureComponent<Props, State> {
         onFetchData={this.onFetchData}
         isFilterOpen={isFilterOpen}
         userLocation={userLocation}
+        isRefreshing={isRefreshing}
         places={placesDataset}
         mapHeight={mapHeight}
         error={error}

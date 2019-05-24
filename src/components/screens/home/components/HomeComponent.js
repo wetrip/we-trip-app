@@ -34,8 +34,8 @@ type LatLng = {
 
 type Place = {
   distanceToUser: number,
+  images: Array<string>,
   location: LatLng,
-  imageURL: string,
   isOpen: boolean,
   name: string,
   id: number,
@@ -53,6 +53,7 @@ type Props = {
   onRefreshData: Function,
   onFetchData: Function,
   isFilterOpen: boolean,
+  isRefreshing: boolean,
   userLocation: ?LatLng,
   places: Array<Place>,
   parentState: Object,
@@ -73,6 +74,7 @@ const HomeComponent = ({
   onRefreshData,
   isFilterOpen,
   userLocation,
+  isRefreshing,
   parentState,
   onFetchData,
   mapHeight,
@@ -108,6 +110,7 @@ const HomeComponent = ({
               onPressListItem={onPressListItem}
               onEndListReached={onFetchData}
               onRefreshData={onRefreshData}
+              isRefreshing={isRefreshing}
               loading={loading}
               places={places}
             />

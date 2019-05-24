@@ -1,13 +1,14 @@
 // @flow
 
-import React from 'react';
+import React, { Fragment } from 'react';
 import { FlatList, View } from 'react-native';
 import styled from 'styled-components';
 
+import Loading from '../../../common/Loading';
 import ToursListItem from './ToursListItem';
 import appStyles from '../../../../styles';
 
-const List = styled(FlatList)`
+const Wrapper = styled(View)`
   width: 100%;
   height: 100%;
   background-color: ${({ theme }) => theme.colors.secondaryColor};
@@ -26,8 +27,8 @@ type LatLng = {
 
 type Place = {
   distanceToUser: number,
+  images: Array<string>,
   location: LatLng,
-  imageURL: string,
   isOpen: boolean,
   name: string,
   id: number,
@@ -36,7 +37,7 @@ type Place = {
 type Tour = {
   destinations: Array<Place>,
   description: string,
-  imageURL: string,
+  image: string,
   title: string,
   id: number,
 };
@@ -44,17 +45,19 @@ type Tour = {
 type Props = {
   onSelectTour: Function,
   tours: Array<Tour>,
+  loading: boolean,
+  error: boolean,
 };
 
-const TestComponent = ({ onSelectTour, tours }: Props): Object => (
-  <List
+const renderList = (onSelectTour: Function, tours: Array<Tour>): Object => (
+  <FlatList
     renderItem={({ item, index }) => (
       <ToursListItem
-        onPressStartButton={() => onSelectTour(item.id)}
+        onPressStartButton={() => onSelectTour(item)}
         numberOfDestinatios={item.destinations.length}
         description={item.description}
         datasetLength={tours.length}
-        imageURL={item.imageURL}
+        imageURL={item.image}
         title={item.title}
         index={index}
       />
@@ -69,4 +72,16 @@ const TestComponent = ({ onSelectTour, tours }: Props): Object => (
   />
 );
 
-export default TestComponent;
+const ToursComponent = ({
+  onSelectTour,
+  loading,
+  error,
+  tours,
+}: Props): Object => (
+  <Wrapper>
+    {loading && <Loading />}
+    {tours.length > 0 && renderList(onSelectTour, tours)}
+  </Wrapper>
+);
+
+export default ToursComponent;

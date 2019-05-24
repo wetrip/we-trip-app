@@ -16,12 +16,8 @@ const ImagesList = styled(FlatList)`
   margin-bottom: ${({ theme }) => 1.5 * theme.metrics.extraLargeSize}px;
 `;
 
-type Image = {
-  url: string,
-};
-
 type Props = {
-  images: Array<Image>,
+  images: Array<string>,
 };
 
 type State = {
@@ -61,11 +57,11 @@ class PlaceImagesList extends Component<Props, State> {
             <PlaceImagesListItem
               onPressImage={() => this.onPressImage(index)}
               isFirst={index === 0}
-              imageURL={item.url}
+              imageURL={item}
             />
           )}
           showsHorizontalScrollIndicator={false}
-          keyExtractor={item => item.url}
+          keyExtractor={item => item}
           data={images}
           horizontal
         />

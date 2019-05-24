@@ -33,10 +33,6 @@ type LatLng = {
   latitude: number,
 };
 
-type Image = {
-  url: string,
-};
-
 type OperatingHoursType = {
   dayOfWeek: number,
   closeAt: string,
@@ -65,7 +61,7 @@ type Transport = {
 
 type Place = {
   operatingHours: Array<OperatingHoursType>,
-  images: Array<Image>,
+  images: Array<string>,
   distanceToUser: number,
   description: string,
   location: LatLng,
@@ -119,7 +115,7 @@ const PlacesBottomList = ({
         <DefaultPlaceListItemWithCard
           onPressListItem={() => onPressListItem(item.id)}
           distanceToUser={item.distanceToUser}
-          imageURL={item.images[index].url}
+          imageURL={item.images[0]}
           isOpen={item.isOpen}
           name={item.name}
         />

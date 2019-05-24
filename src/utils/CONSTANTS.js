@@ -11,8 +11,8 @@ const PARAMS = {
   ON_TYPE_PLACE_NAME: 'ON_TYPE_PLACE_NAME',
   ON_SEARCH_PLACE: 'ON_SEARCH_PLACE',
   TOGGLE_FILTER: 'TOGGLE_FILTER',
+  TOUR_SELECTED: 'TOUR_SELECTED',
   PLACE_ID: 'PLACE_ID',
-  TOUR_ID: 'TOUR_ID',
 };
 
 const ASPECT_RATIO = appStyles.metrics.width / appStyles.metrics.height;
