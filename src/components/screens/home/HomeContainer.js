@@ -149,7 +149,6 @@ class HomeContainer extends PureComponent<Props, State> {
 
     getPlaces(userLocation, {
       ...currentFilter,
-      _limit: CONSTANTS.VALUES.LIMIT_ITEMS_RECEIVED_PER_REQUEST,
       _page: currentFetchPage + 1,
     });
   };

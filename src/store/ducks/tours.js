@@ -11,9 +11,9 @@ const INITIAL_STATE = {
 };
 
 export const Creators = {
-  getTours: (userLocation, queryParams) => ({
+  getTours: queryParams => ({
     type: Types.GET_TOURS_REQUEST,
-    payload: { userLocation, queryParams },
+    payload: { queryParams },
   }),
 
   getToursSuccess: tours => ({
