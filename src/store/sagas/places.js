@@ -1,6 +1,7 @@
 import { call, put } from 'redux-saga/effects';
 
 import parseParams from './utils/parseParams';
+import CONSTANTS from '../../utils/CONSTANTS';
 import api from '../../services/api';
 
 import { Creators as PlacesCreators } from '../ducks/places';
@@ -8,8 +9,10 @@ import { Creators as PlacesCreators } from '../ducks/places';
 export function* getPlaces({ payload }) {
   try {
     const { userLocation, queryParams } = payload;
-    const requestParams = {};
     let headers = {};
+    const requestParams = {
+      _limit: CONSTANTS.VALUES.LIMIT_ITEMS_RECEIVED_PER_REQUEST,
+    };
 
     if (userLocation) {
       headers = {

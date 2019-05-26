@@ -144,6 +144,7 @@ class PlacesMap extends PureComponent<Props, State> {
           showsMyLocationButton={false}
           onMapReady={this.onMapReady}
           isMapReady={isMapReady}
+          showsCompass={false}
           height={mapHeight}
           showsUserLocation
           loadingEnabled

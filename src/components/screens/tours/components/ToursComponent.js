@@ -4,6 +4,7 @@ import React, { Fragment } from 'react';
 import { FlatList, View } from 'react-native';
 import styled from 'styled-components';
 
+import FooterListLoading from '../../../common/FooterListLoading';
 import Loading from '../../../common/Loading';
 import ToursListItem from './ToursListItem';
 import appStyles from '../../../../styles';
@@ -19,6 +20,58 @@ const ITEM_LIST_WIDTH = appStyles.metrics.getWidthFromDP('84%');
 const getSnapToOffsets = (numberOfTours): Array<Number> => Array(numberOfTours)
   .fill(ITEM_LIST_WIDTH)
   .map((item, index) => item * index);
+
+type ListProps = {
+  isAllDataFetched: boolean,
+  onFetchData: Function,
+  tours: Array<Tour>,
+  loading: boolean,
+};
+
+const renderList = ({
+  isAllDataFetched,
+  onFetchData,
+  loading,
+  tours,
+}: ListProps): Object => (
+  <FlatList
+    renderItem={({ item, index }) => (
+      <ToursListItem
+        onPressStartButton={() => onSelectTour(item)}
+        numberOfDestinatios={item.destinations.length}
+        description={item.description}
+        datasetLength={tours.length}
+        imageURL={item.image}
+        title={item.title}
+        index={index}
+      />
+    )}
+    ListFooterComponent={() => (!isAllDataFetched || loading) && (
+    <FooterListLoading
+      withHorizontalList={false}
+      styleProps={{
+        paddingRight: appStyles.metrics.extraLargeSize,
+        height: '100%',
+      }}
+    />
+    )
+    }
+    onEndReachedThreshold={0.5}
+    initialNumToRender={5}
+    onEndReached={() => {
+      if (tours.length > 0 && !isAllDataFetched) {
+        onFetchData();
+      }
+    }}
+    snapToOffsets={getSnapToOffsets(tours.length)}
+    showsHorizontalScrollIndicator={false}
+    keyExtractor={item => `${item.id}`}
+    snapToInterval={ITEM_LIST_WIDTH}
+    decelerationRate="fast"
+    data={tours}
+    horizontal
+  />
+);
 
 type LatLng = {
   longitude: number,
@@ -43,44 +96,31 @@ type Tour = {
 };
 
 type Props = {
+  isAllDataFetched: boolean,
   onSelectTour: Function,
+  onFetchData: Function,
   tours: Array<Tour>,
   loading: boolean,
   error: boolean,
 };
 
-const renderList = (onSelectTour: Function, tours: Array<Tour>): Object => (
-  <FlatList
-    renderItem={({ item, index }) => (
-      <ToursListItem
-        onPressStartButton={() => onSelectTour(item)}
-        numberOfDestinatios={item.destinations.length}
-        description={item.description}
-        datasetLength={tours.length}
-        imageURL={item.image}
-        title={item.title}
-        index={index}
-      />
-    )}
-    snapToOffsets={getSnapToOffsets(tours.length)}
-    showsHorizontalScrollIndicator={false}
-    keyExtractor={item => `${item.id}`}
-    snapToInterval={ITEM_LIST_WIDTH}
-    decelerationRate="fast"
-    data={tours}
-    horizontal
-  />
-);
-
 const ToursComponent = ({
+  isAllDataFetched,
   onSelectTour,
+  onFetchData,
   loading,
   error,
   tours,
 }: Props): Object => (
   <Wrapper>
-    {loading && <Loading />}
-    {tours.length > 0 && renderList(onSelectTour, tours)}
+    {tours.length === 0 && loading && <Loading />}
+    {tours.length > 0
+      && renderList({
+        isAllDataFetched,
+        onFetchData,
+        loading,
+        tours,
+      })}
   </Wrapper>
 );
 

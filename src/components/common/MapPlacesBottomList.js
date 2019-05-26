@@ -103,6 +103,7 @@ const PlacesBottomList = ({
             <FooterListLoading
               withHorizontalList
               styleProps={{
+                paddingRight: appStyles.metrics.extraLargeSize,
                 height: '100%',
               }}
             />
