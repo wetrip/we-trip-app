@@ -22,7 +22,7 @@ const Wrapper = styled(TouchableOpacity)`
 
 type Props = {
   onPressListItem: Function,
-  distanceToUser: Number,
+  distanceToUser: number,
   imageURL: string,
   isOpen: boolean,
   name: string,

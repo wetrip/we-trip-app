@@ -23,6 +23,7 @@ const getSnapToOffsets = (numberOfTours): Array<Number> => Array(numberOfTours)
 
 type ListProps = {
   isAllDataFetched: boolean,
+  onSelectTour: Function,
   onFetchData: Function,
   tours: Array<Tour>,
   loading: boolean,
@@ -30,6 +31,7 @@ type ListProps = {
 
 const renderList = ({
   isAllDataFetched,
+  onSelectTour,
   onFetchData,
   loading,
   tours,
@@ -117,6 +119,7 @@ const ToursComponent = ({
     {tours.length > 0
       && renderList({
         isAllDataFetched,
+        onSelectTour,
         onFetchData,
         loading,
         tours,
