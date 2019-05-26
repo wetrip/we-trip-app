@@ -5,9 +5,10 @@ import { ScrollView, Platform, View } from 'react-native';
 import styled from 'styled-components';
 
 import OperatingHours from './sections/operating-hours/OperatingHours';
-import Location from './sections/location/Location';
+import IsPlaceOpenOrClosed from './sections/IsPlaceOpenOrClosed';
 import ImagesList from './sections/images-list/ImagesList';
 import Transports from './sections/transports/Transports';
+import Location from './sections/location/Location';
 import Description from './sections/Description';
 import Categories from './sections/Categories';
 import Prices from './sections/Prices';
@@ -72,6 +73,7 @@ type Place = {
   prices: Array<Price>,
   description: string,
   location: LatLng,
+  isOpen: boolean,
   name: string,
 };
 
@@ -88,6 +90,7 @@ const renderContent = (place: Place): Object => {
     categories,
     transports,
     location,
+    isOpen,
     prices,
     images,
     name,
@@ -104,11 +107,11 @@ const renderContent = (place: Place): Object => {
       }}
     >
       <Name>{name}</Name>
+      <IsPlaceOpenOrClosed
+        isOpen={isOpen}
+      />
       <ImagesList
         images={images}
-      />
-      <Categories
-        categories={categories}
       />
       <Description
         description={description}
@@ -125,6 +128,9 @@ const renderContent = (place: Place): Object => {
       />
       <Transports
         transports={transports}
+      />
+      <Categories
+        categories={categories}
       />
     </ContentWrapper>
   );

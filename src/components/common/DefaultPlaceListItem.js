@@ -93,7 +93,8 @@ const DefaultPlaceListItem = ({
       >
         {isOpen ? 'Open Now' : 'Closed Now'}
       </PlaceStatus>
-      <DistanceWrapper>
+      {distanceToUser && (
+        <DistanceWrapper>
         <Icon
           color={appStyles.colors.primaryColor}
           name="routes"
@@ -105,6 +106,7 @@ const DefaultPlaceListItem = ({
 km from you
         </DistanceText>
       </DistanceWrapper>
+      )}
     </TextContentWrapper>
   </ContentWrapper>
 );
