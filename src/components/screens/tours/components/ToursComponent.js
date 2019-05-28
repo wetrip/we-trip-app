@@ -4,6 +4,7 @@ import React, { Fragment } from 'react';
 import { FlatList, View } from 'react-native';
 import styled from 'styled-components';
 
+import MessageAlert, { MESSAGE_TYPES } from '../../../common/MessageAlert';
 import FooterListLoading from '../../../common/FooterListLoading';
 import Loading from '../../../common/Loading';
 import ToursListItem from './ToursListItem';
@@ -113,18 +114,34 @@ const ToursComponent = ({
   loading,
   error,
   tours,
-}: Props): Object => (
-  <Wrapper>
-    {tours.length === 0 && loading && <Loading />}
-    {tours.length > 0
-      && renderList({
-        isAllDataFetched,
-        onSelectTour,
-        onFetchData,
-        loading,
-        tours,
-      })}
-  </Wrapper>
-);
+}: Props): Object => {
+  const shouldShowNoToursMessage = !loading && !error && tours.length === 0;
+  const shouldShowErrorMessage = !loading && error && tours.length === 0;
+  const shouldShowLoading = loading && !error && tours.length === 0;
+
+  return (
+    <Wrapper>
+      {shouldShowLoading && <Loading />}
+      {shouldShowNoToursMessage && (
+        <MessageAlert
+          type={MESSAGE_TYPES.NO_TOURS}
+        />
+      )}
+      {shouldShowErrorMessage && (
+        <MessageAlert
+          type={MESSAGE_TYPES.CONNECTION_ERROR}
+        />
+      )}
+      {tours.length > 0
+        && renderList({
+          isAllDataFetched,
+          onSelectTour,
+          onFetchData,
+          loading,
+          tours,
+        })}
+    </Wrapper>
+  );
+};
 
 export default ToursComponent;
