@@ -41,6 +41,11 @@ const PlaceItemButton = styled(TouchableOpacity)`
   width: ${({ theme }) => theme.metrics.width - theme.metrics.getWidthFromDP('10%')}px;
 `;
 
+const BottomListComponent = styled(View)`
+  width: 100%;
+  height: ${({ theme }) => theme.metrics.getWidthFromDP('35%')}px;
+`;
+
 type LatLng = {
   longitude: number,
   latitude: number,
@@ -67,6 +72,7 @@ const ToursList = ({ onSelectPlace, places }: Props): Object => (
       keyExtractor={item => `${item.id}`}
       showsVerticalScrollIndicator={false}
       data={places}
+      ListFooterComponent={<BottomListComponent />}
       renderItem={({ item, index }) => (
         <ListItemWrapper>
           <CircularMarker />
