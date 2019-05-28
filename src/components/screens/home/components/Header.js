@@ -6,6 +6,10 @@ import {
 } from 'react-native';
 import styled from 'styled-components';
 
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { Creators as PlaceCreators } from '../../../../store/ducks/places';
+
 import isEqualsOrLargestThanIphoneX from '../../../../utils/isEqualsOrLargestThanIphoneX';
 import SearchPlaceTextInput from './SearchPlaceTextInput';
 import CONSTANTS from '../../../../utils/CONSTANTS';
@@ -30,6 +34,8 @@ type State = {
 
 type Props = {
   navigation: Object,
+  loading: boolean,
+  error: boolean,
 };
 
 class Header extends Component<Props, State> {
@@ -69,7 +75,6 @@ class Header extends Component<Props, State> {
     }
   }
 
-
   onTypePlaceName = (placeName: string): void => {
     this.setState({
       placeName,
@@ -85,8 +90,9 @@ class Header extends Component<Props, State> {
 
   onPressIconButton = (): void => {
     const { indexIconSelected, isInputFocused } = this.state;
+    const { loading, error } = this.props;
 
-    if (isInputFocused) {
+    if (isInputFocused || loading || error) {
       return;
     }
 
@@ -183,4 +189,14 @@ class Header extends Component<Props, State> {
   }
 }
 
-export default Header;
+const mapDispatchToProps = dispatch => bindActionCreators(PlaceCreators, dispatch);
+
+const mapStateToProps = state => ({
+  loading: state.places.loading,
+  error: state.places.error,
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Header);

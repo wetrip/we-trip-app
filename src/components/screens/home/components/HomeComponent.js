@@ -4,6 +4,7 @@ import React, { Fragment } from 'react';
 import { TouchableWithoutFeedback, ScrollView, View } from 'react-native';
 import styled from 'styled-components';
 
+import MessageAlert, { MESSAGE_TYPES } from '../../../common/MessageAlert';
 import Loading from '../../../common/Loading';
 import ListScreen from './list/PlacesList';
 import MapScreen from './map/PlacesMap';
@@ -82,65 +83,79 @@ const HomeComponent = ({
   places,
   error,
 }: Props): Object => {
+  const shouldShowNoPlacesMessage = !loading && !error && places.length === 0;
+  const shouldShowErrorMessage = !loading && error && places.length === 0;
   const shouldShowLoading = loading && !error && places.length === 0;
 
   return (
     <Wrapper>
       {shouldShowLoading && <Loading />}
-      <Fragment>
-        <ContentWrapper
-          ref={(ref: any): void => onSetFlatListRef(ref)}
-          onLayout={({
-            nativeEvent: {
-              layout: { height },
-            },
-          }) => {
-            if (mapHeight === 0) {
-              onSetMapHeight(height);
-            }
-          }}
-          showsHorizontalScrollIndicator={false}
-          scrollEnabled={false}
-          pagingEnabled
-          horizontal
-        >
-          <Fragment>
-            <ListScreen
-              isAllDataFetched={isAllDataFetched}
-              onPressListItem={onPressListItem}
-              onEndListReached={onFetchData}
-              onRefreshData={onRefreshData}
-              isRefreshing={isRefreshing}
-              loading={loading}
-              places={places}
-            />
-            {mapHeight > 0 && (
-              <MapScreen
-                onNavigateToMainStack={this.onNavigateToMainStack}
+      {shouldShowNoPlacesMessage && (
+        <MessageAlert
+          type={MESSAGE_TYPES.NO_PLACES}
+        />
+      )}
+      {shouldShowErrorMessage && (
+        <MessageAlert
+          type={MESSAGE_TYPES.CONNECTION_ERROR}
+        />
+      )}
+      {places.length > 0 && (
+        <Fragment>
+          <ContentWrapper
+            ref={(ref: any): void => onSetFlatListRef(ref)}
+            onLayout={({
+              nativeEvent: {
+                layout: { height },
+              },
+            }) => {
+              if (mapHeight === 0) {
+                onSetMapHeight(height);
+              }
+            }}
+            showsHorizontalScrollIndicator={false}
+            scrollEnabled={false}
+            pagingEnabled
+            horizontal
+          >
+            <Fragment>
+              <ListScreen
                 isAllDataFetched={isAllDataFetched}
                 onPressListItem={onPressListItem}
                 onEndListReached={onFetchData}
-                userLocation={userLocation}
-                mapHeight={mapHeight}
+                onRefreshData={onRefreshData}
+                isRefreshing={isRefreshing}
                 loading={loading}
                 places={places}
               />
-            )}
-          </Fragment>
-        </ContentWrapper>
-        {shouldShowDarkLayer && (
-          <TouchableWithoutFeedback
-            onPress={onPressDarkLayer}
-          >
-            <DarkLayer />
-          </TouchableWithoutFeedback>
-        )}
-        <Filter
-          onSearchWithFilter={onSearchWithFilter}
-          onToggleFilter={onToggleFilter}
-          isVisible={isFilterOpen}
-        />
-      </Fragment>
+              {mapHeight > 0 && (
+                <MapScreen
+                  onNavigateToMainStack={this.onNavigateToMainStack}
+                  isAllDataFetched={isAllDataFetched}
+                  onPressListItem={onPressListItem}
+                  onEndListReached={onFetchData}
+                  userLocation={userLocation}
+                  mapHeight={mapHeight}
+                  loading={loading}
+                  places={places}
+                />
+              )}
+            </Fragment>
+          </ContentWrapper>
+        </Fragment>
+      )}
+      {shouldShowDarkLayer && (
+        <TouchableWithoutFeedback
+          onPress={onPressDarkLayer}
+        >
+          <DarkLayer />
+        </TouchableWithoutFeedback>
+      )}
+      <Filter
+        onSearchWithFilter={onSearchWithFilter}
+        onToggleFilter={onToggleFilter}
+        isVisible={isFilterOpen}
+      />
     </Wrapper>
   );
 };

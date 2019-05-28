@@ -95,17 +95,17 @@ const DefaultPlaceListItem = ({
       </PlaceStatus>
       {distanceToUser && (
         <DistanceWrapper>
-        <Icon
-          color={appStyles.colors.primaryColor}
-          name="routes"
-          size={22}
-        />
-        <DistanceText>
-          {distanceToUser}
-          {' '}
+          <Icon
+            color={appStyles.colors.primaryColor}
+            name="routes"
+            size={22}
+          />
+          <DistanceText>
+            {distanceToUser}
+            {' '}
 km from you
-        </DistanceText>
-      </DistanceWrapper>
+          </DistanceText>
+        </DistanceWrapper>
       )}
     </TextContentWrapper>
   </ContentWrapper>
