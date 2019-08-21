@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://192.168.25.27:3000',
+  baseURL: 'http://wanderlustapi20190719105050.azurewebsites.net/api/',
 });
 
 export default api;

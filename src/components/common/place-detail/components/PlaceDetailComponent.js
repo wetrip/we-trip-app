@@ -1,4 +1,5 @@
 // @flow
+import Reactotron from 'reactotron-react-native';
 
 import React, { Fragment } from 'react';
 import { ScrollView, Platform, View } from 'react-native';
@@ -14,7 +15,6 @@ import Categories from './sections/Categories';
 import Prices from './sections/Prices';
 import Name from './sections/Name';
 
-import CONSTANTS from '../../../../utils/CONSTANTS';
 import Loading from '../../Loading';
 import appStyles from '../../../../styles';
 
@@ -66,7 +66,7 @@ type Category = {
 };
 
 type Place = {
-  operatingHours: Array<OperatingHoursType>,
+  schedules: Array<OperatingHoursType>,
   transports: Array<Transport>,
   categories: Array<Category>,
   images: Array<string>,
@@ -84,8 +84,9 @@ type Props = {
 };
 
 const renderContent = (place: Place): Object => {
+
   const {
-    operatingHours,
+    schedules,
     description,
     categories,
     transports,
@@ -95,6 +96,8 @@ const renderContent = (place: Place): Object => {
     images,
     name,
   } = place;
+
+  Reactotron.log("place", place);
 
   return (
     <ContentWrapper
@@ -116,22 +119,22 @@ const renderContent = (place: Place): Object => {
       <Description
         description={description}
       />
-      <OperatingHours
-        operatingHours={operatingHours}
-      />
-      <Prices
+      {schedules && schedules.length > 0 && <OperatingHours
+        operatingHours={schedules}
+      />}
+      {prices && prices.length > 0 && <Prices
         prices={prices}
-      />
+      />}
       <Location
         location={location}
         placeName={name}
       />
-      <Transports
+      {transports && transports.length > 0 && <Transports
         transports={transports}
-      />
-      <Categories
+      />}
+      {categories && categories.length > 0 && <Categories
         categories={categories}
-      />
+      />}
     </ContentWrapper>
   );
 };

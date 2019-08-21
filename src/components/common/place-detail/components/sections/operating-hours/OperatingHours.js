@@ -1,5 +1,7 @@
 // @flow
 
+import Reactotron from 'reactotron-react-native';
+
 import React, { Fragment, Component } from 'react';
 import { FlatList, View } from 'react-native';
 import styled from 'styled-components';
@@ -49,6 +51,11 @@ class OperatingHours extends Component<Props, State> {
   render() {
     const { indexDaySelected } = this.state;
     const { operatingHours } = this.props;
+
+
+    Reactotron.log("props from OperatingHours", this.props);
+    Reactotron.log("indexDaySelected", indexDaySelected);
+
     const { openAt, closeAt } = operatingHours[indexDaySelected];
 
     return (

@@ -1,3 +1,5 @@
+import Reactotron from 'reactotron-react-native';
+
 export const Types = {
   GET_PLACE_REQUEST: '@place/GET_PLACE_REQUEST',
   GET_PLACE_SUCCESS: '@place/GET_PLACE_SUCCESS',
@@ -37,11 +39,15 @@ const place = (state = INITIAL_STATE, { type, payload }) => {
       };
 
     case Types.GET_PLACE_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        data: payload.place,
-      };
+        {
+            Reactotron.log("GET_PLACE_SUCCESS", payload.place);
+
+            return {
+                ...state,
+                loading: false,
+                data: payload.place,
+            };
+        }
 
     case Types.GET_PLACE_FAILURE:
       return {

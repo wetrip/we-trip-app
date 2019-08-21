@@ -82,7 +82,7 @@ class ToursContainer extends Component<Props, State> {
     });
 
     getTours({
-      _page: currentFetchPage + 1,
+      page: currentFetchPage + 1,
     });
   };
 

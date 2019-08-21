@@ -91,11 +91,17 @@ const Location = ({ location, placeName }: Props): Object => (
           latitudeDelta: LATITUDE_DELTA,
         }}
       >
-        <Marker coordinate={location}>
-          <Icon color={appStyles.colors.red} name="map-marker" size={36} />
+        <Marker
+coordinate={location}>
+          <Icon
+color={appStyles.colors.red}
+name="map-marker"
+size={36} />
         </Marker>
       </MapContainer>
-      <OpenMapButton placeName={placeName} location={location} />
+      <OpenMapButton
+placeName={placeName}
+location={location} />
     </Wrapper>
   </Fragment>
 );

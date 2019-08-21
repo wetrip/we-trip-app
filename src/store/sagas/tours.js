@@ -9,7 +9,7 @@ export function* getTours({ payload }) {
   try {
     const { queryParams } = payload;
     const requestParams = {
-      _limit: CONSTANTS.VALUES.LIMIT_ITEMS_RECEIVED_PER_REQUEST,
+      pageSize: CONSTANTS.VALUES.LIMIT_ITEMS_RECEIVED_PER_REQUEST,
     };
 
     Object.keys(queryParams).forEach((key) => {

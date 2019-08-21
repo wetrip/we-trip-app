@@ -17,7 +17,7 @@ const App = (): Object => (
     store={store}
   >
     <Fragment>
-      <StatusBar
+    <StatusBar
         backgroundColor={appStyles.colors.androidToolbarColor}
         barStyle="dark-content"
       />

@@ -18,7 +18,8 @@ const Row = styled(View)`
 
 type Price = {
   priceTypeId: number,
-  price: string,
+  value: number,
+  valueFormatted: string
 };
 
 type Props = {
@@ -48,7 +49,7 @@ const Prices = ({ prices }: Props): Object => (
               color={appStyles.colors.subText}
               weight={600}
             >
-              {item.price}
+              {item.valueFormatted}
             </DefaultText>
           </Row>
         );

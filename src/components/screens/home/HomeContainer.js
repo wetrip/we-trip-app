@@ -149,7 +149,7 @@ class HomeContainer extends PureComponent<Props, State> {
 
     getPlaces(userLocation, {
       ...currentFilter,
-      _page: currentFetchPage + 1,
+      page: currentFetchPage + 1,
     });
   };
 
